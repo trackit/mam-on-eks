@@ -1,3 +1,5 @@
+# MAM Inside EKS
+
 This documentation provides steps to deploy Phraseanet using Kubernetes instead of Docker Compose. While Phraseanet's official documentation shows how to use Docker Compose, this guide will focus on deploying the services to a Kubernetes cluster.
 
 ### Overview

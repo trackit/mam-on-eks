@@ -1,6 +1,10 @@
 # MAM Inside EKS
 
-This documentation provides steps to deploy Phraseanet using Kubernetes instead of Docker Compose. While Phraseanet's official documentation shows how to use Docker Compose, this guide will focus on deploying the services to a Kubernetes cluster.
+This documentation provides steps to deploy Phraseanet using Kubernetes instead of Docker Compose. 
+While Phraseanet's official documentation shows how to use Docker Compose, this guide will focus on deploying the services to a Kubernetes cluster.
+
+P.S.: It was discovered that there's an unofficial helm chart to be used together with minikube.  
+Using helm is a plan B.
 
 ### Overview
 
@@ -10,15 +14,15 @@ In Kubernetes, each service defined in the Docker Compose file becomes one or mo
 
 The following services are discovered so far:
 
-- `gateway`
-- `db-backup`
-- `worker`
-- `elasticsearch`
-- `db`
-- `rabbitmq`
-- `mailhog`
-- `redis`
-- `phraseanet`
+- `phraseanet-gateway`
+- `phraseanet-db`
+- `phraseanet-worker`
+- `phraseanet-elasticsearch`
+- `phraseanet-fpm`
+- `phraseanet-rabbitmq`
+- `phraseanet-redis`
+- `phraseanet-redis-session`
+- `phraseanet-setup`
 
 They provide Dockerfiles to build the images locally. Also they share images through dockerhub profile alchemyfr.  
 ```bash
@@ -33,7 +37,7 @@ https://hub.docker.com/repository/docker/alchemyfr/phraseanet-db
 https://hub.docker.com/repository/docker/alchemyfr/phraseanet-elasticsearch```
 ```
 
-The `gateway` and the `phraseanet`services are the core components of the platform.  
+The `gateway`, `phraseanet`, and `setup`services are the core components of the platform.  
 The phraseanet service consumes a lot of resource units.  
 
 ### Cluster Setup
@@ -172,6 +176,8 @@ To turn it on again just change the `--nodes` number above 0 and don't forget to
 
 ### Phraseanet Setup
 
+#### Docker Compose Setup
+
 This is a work in progress.  
 We initially used the **Kompose** tool to convert the **Docker Compose** files into **Kubernetes manifest** files.  
 We need to test each service individually and verify its functionality.
@@ -179,8 +185,8 @@ We need to test each service individually and verify its functionality.
 Currently, the **dependencies** are not fully mapped, but some have been identified:
 
 - **Database-dependent:**
-    - Worker
-- **Backend/Worker-dependent:**
+    - Worker, Setup
+- **FPM/Worker-dependent:**
     - Gateway
 - **Frontend-dependent:**
     - Gateway
@@ -192,4 +198,17 @@ Kubernetes objects involved for each service:
 - Gateway
   - Config Map
   - Persistent Volume
-  
+  - Deployment
+
+After multiple attempts and upon discovering the Helm chart, we decided to try deploying using Helm, as detailed below.  
+
+#### Helm Chart Setup
+
+The Helm chart for Phraseanet is not updated as frequently as the main repository, which primarily focuses on Docker Compose. The chart is designed to run on Minikube, but with minor modifications, it can be deployed on any Kubernetes distribution.  
+
+##### Steps to Deploy
+1. Clone the repository (link here).
+2. The repository contains two Helm charts:
+  - Phraseanet (the primary solution).
+  - Phrasea (a newer solution).
+3. We are using Phraseanet. To better understand its deployment structure, we copied the Helm templates into this repository inside Phraseanet/helm.

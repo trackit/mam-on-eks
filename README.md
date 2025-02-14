@@ -33,7 +33,8 @@ https://hub.docker.com/repository/docker/alchemyfr/phraseanet-db
 https://hub.docker.com/repository/docker/alchemyfr/phraseanet-elasticsearch```
 ```
 
-The `gateway` service is the core component of the deployment.
+The `gateway` and the `phraseanet`services are the core components of the platform.  
+The phraseanet service consumes a lot of resource units.  
 
 ### Cluster Setup
 
@@ -166,3 +167,29 @@ If you prefer to save resources during off-hours, you can scale down the cluster
 export CLUSTER_NAME=mam-sandbox
 eksctl scale nodegroup --cluster $CLUSTER_NAME --name $(eksctl get nodegroup --cluster $CLUSTER_NAME --profile sandbox -o json | jq -r '.[].Name') --nodes 0 --nodes-min 0 --nodes-max 10 --profile sandbox
 ```
+
+To turn it on again just change the `--nodes` number above 0 and don't forget to also increase `--node-min` accordinly.  
+
+### Phraseanet Setup
+
+This is a work in progress.  
+We initially used the **Kompose** tool to convert the **Docker Compose** files into **Kubernetes manifest** files.  
+We need to test each service individually and verify its functionality.
+
+Currently, the **dependencies** are not fully mapped, but some have been identified:
+
+- **Database-dependent:**
+    - Worker
+- **Backend/Worker-dependent:**
+    - Gateway
+- **Frontend-dependent:**
+    - Gateway
+
+For reference, the Phraseanet GitHub page provides the **Docker Compose** setup and instructions for running the services:  
+[Phraseanet GitHub Repository](https://github.com/alchemy-fr/Phraseanet)
+
+Kubernetes objects involved for each service:  
+- Gateway
+  - Config Map
+  - Persistent Volume
+  

@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  fsType: ext4
+  type: gp2
+  tagSpecification_1: "Owner=Leandro Mota"
+  tagSpecification_2: "Project=mam-inside-eks"
+  tagSpecification_3: "Name=eks-nodes-storage"
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

@@ -138,7 +138,7 @@ ingress:
   tls: false
 
 saml:
-  enabled: true
+  enabled: false
   annotations: {}
   phraseanet_k8s_namespace:
   saml_phraseanet_host:

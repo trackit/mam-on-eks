@@ -19,15 +19,15 @@ module "eks" {
 
   eks_managed_node_groups = {
     eks-nodes = {
-      ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["t3.large"]
-      min_size       = 1
-      max_size       = 10
-      desired_size   = 2
-      availability_zones = ["us-west-2a","us-west-2b"]
-      subnet_ids = [local.private_subnets[0], local.private_subnets[1]]
+      ami_type           = "AL2023_x86_64_STANDARD"
+      instance_types     = ["t3.large"]
+      min_size           = 1
+      max_size           = 10
+      desired_size       = 2
+      availability_zones = ["us-west-2a", "us-west-2b"]
+      subnet_ids         = [local.private_subnets[0], local.private_subnets[1]]
       labels = {
-        role       = "applications"
+        role = "applications"
       }
     }
   }
@@ -65,7 +65,7 @@ module "eks" {
         default = {
           policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
           access_scope = {
-            type       = "cluster"
+            type = "cluster"
           }
         }
       }
@@ -75,5 +75,7 @@ module "eks" {
     Name        = var.cluster_name
     Environment = var.env
     Terraform   = "true"
+    Owner       = var.owner
+    Project     = var.project
   }
 }

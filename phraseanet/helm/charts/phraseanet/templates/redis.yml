@@ -1,0 +1,25 @@
+{{- if and .Values.running .Values.redis.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phraseanet-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phraseanet
+      tier: redis
+  template:
+    metadata:
+      labels:
+        app: phraseanet
+        tier: redis
+    spec:
+    {{- if .Values.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.nodeSelector | nindent 8 }}
+    {{- end }}
+      containers:
+      - name: redis
+        image: redis:5.0.5
+        terminationMessagePolicy: FallbackToLogsOnError
+{{- end }}

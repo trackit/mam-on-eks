@@ -1,0 +1,93 @@
+{{- if .Values.running }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phraseanet-gateway
+spec:
+  replicas: {{ .Values.app.replicas.gateway.scale }}
+  selector:
+    matchLabels:
+      app: phraseanet
+      tier: gateway
+  template:
+    metadata:
+      labels:
+        app: phraseanet
+        tier: gateway
+    spec:
+    {{- if .Values.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.nodeSelector | nindent 8 }}
+    {{- end }}
+      volumes:
+      - name: phraseanet-datas
+        persistentVolumeClaim:
+          claimName: {{ .Values.app.pvc.data.name }}
+      - name: phraseanet-thumbnails
+        persistentVolumeClaim:
+          claimName: {{ .Values.app.pvc.thumbnails.name }}
+      - name: phraseanet-custom
+        persistentVolumeClaim:
+          claimName: {{ .Values.app.pvc.custom.name }}
+      - name: phraseanet-wwwplugins
+        persistentVolumeClaim:
+          claimName: {{ .Values.app.pvc.wwwplugins.name }}
+      {{ if .Values.image.pullSecret.enabled }}
+      imagePullSecrets:
+      - name: {{ .Values.image.pullSecret.name }}
+      {{ end }}
+      containers:
+      - name: gateway
+        image: {{ .Values.image.registry }}/phraseanet-nginx:{{ .Values.image.tag.phraseanet }}
+        imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+        terminationMessagePolicy: FallbackToLogsOnError
+        resources:
+{{ toYaml .Values.app.gateway.resources | indent 12 }}
+        volumeMounts:
+        - name: "phraseanet-datas"
+          mountPath: "/var/alchemy/Phraseanet/datas"
+        - name: "phraseanet-thumbnails"
+          mountPath: "/var/alchemy/Phraseanet/www/thumbnails"
+        - name: "phraseanet-custom"
+          mountPath: "/var/alchemy/Phraseanet/www/custom"
+        - name: phraseanet-wwwplugins
+          mountPath: "/var/alchemy/Phraseanet/www/plugins"
+        env:
+        - name: "MAX_BODY_SIZE"
+          value: {{ .Values.http.max_body_size }}
+        - name: "GATEWAY_SEND_TIMEOUT"
+          value : "600"
+        - name: GATEWAY_PROXY_TIMEOUT
+          value: "1200"
+        - name: GATEWAY_FASTCGI_TIMEOUT
+          value: "1200"
+        - name: GATEWAY_FASTCGI_HTTPS
+          value: {{ .Values.http.gateway_https | quote }}
+        - name: PHRASEANET_K8S_NAMESPACE
+          value: {{ .Values.saml.phraseanet_k8s_namespace }}          
+        - name: PHRASEANET_TRUSTED_PROXIES
+          value: {{ .Values.app.phraseanet_trusted_proxies }}
+        - name: "GATEWAY_ALLOWED_IPS"
+          value: {{ .Values.http.gateway_allowed_ips }}
+        - name: "GATEWAY_DENIED_IPS"
+          value: {{ .Values.http.gateway_denied_ips }}
+        - name: "GATEWAY_USERS"
+          value: {{ .Values.http.gateway_users }}
+        - name: "GATEWAY_CSP"
+          value: {{ .Values.http.gateway_csp | quote }}
+        - name: "HTTP_REQUEST_LIMITS"
+          value: {{ .Values.http.request_limits | quote }}          
+        - name: "HTTP_READ_REQUEST_LIMIT_MEMORY"
+          value: {{ .Values.http.read_request_limit_memory | quote }}
+        - name: "HTTP_READ_REQUEST_LIMIT_RATE"
+          value: {{ .Values.http.read_request_limit_rate | quote }}
+        - name: "HTTP_READ_REQUEST_LIMIT_BURST"
+          value: {{ .Values.http.read_request_limit_burst | quote }}
+        - name: "HTTP_WRITE_REQUEST_LIMIT_MEMORY"
+          value: {{ .Values.http.write_request_limit_memory | quote }}
+        - name: "HTTP_WRITE_REQUEST_LIMIT_RATE"
+          value: {{ .Values.http.write_request_limit_rate | quote }}
+        - name: "HTTP_WRITE_REQUEST_LIMIT_BURST"
+          value: {{ .Values.http.write_request_limit_burst | quote }}
+
+{{- end }}
+

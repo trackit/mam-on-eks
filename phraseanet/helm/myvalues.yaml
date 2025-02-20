@@ -190,7 +190,7 @@ app:
   phraseanet_hostname: localhost
   phraseanet_scheme: http
   phraseanet_install: 1
-  phraseanet_setup: 1
+  phraseanet_setup: 0
   phraseanet_upgrade: 1
   phraseanet_admin_account_id:
   phraseanet_admin_account_email: admin@alchemy.fr

@@ -139,14 +139,13 @@ aws eks --region us-west-2 update-kubeconfig \
 
 ## Helm Chart Setup
 
+This setup is done also by terraform when it finishes deploying EKS.
+Though if necessary you can deploy it using a helm client and the `kubeconfig`  for the cluster.
+Here goes the steps.
 ### Steps to Deploy
 
-1. The necessary files are located in the **helm** folder.
-2. The repository contains two Helm charts:
-    - **Phraseanet** (the primary solution).
-    - **Phrasea** (a newer solution).
-3. We are using **Phraseanet**.
-4. To install, run:
+1. The necessary files are located in the `phraseanet/helm/charts` folder.
+2. To install, run :
 
 ```bash
 helm install phraseanet ./phraseanet -n phraseanet --create-namespace
@@ -156,7 +155,43 @@ This command creates a Helm release inside the EKS cluster and installs all the 
 
 ## Phraseanet Post-Installation
 
-The Phraseanet frontend is not publicly exposed. However, you can access it locally using Kubernetes **port forwarding**.
+### Database operation
+
+After the Phraseanet manifest deploys, the worker pods will not function because they depend on the completion of the `phraseanet-setup` job. 
+The setup fails because it tries to access a database inside `phraseanet-db` that doesn't exist, despite the instructions indicating that the container image includes the database (which is not the case). 
+To resolve this, you must remotely connect to the `phraseanet-db` pod and manually create the required databases. 
+#### Steps: 
+
+1. Access the database pod container shell:
+
+```bash
+kubectl exec -i -t -n phraseanet <phraseanet-db-pod-name> -c db -- sh -c "clear; (bash || ash || sh)"
+```
+
+2. To show the current databases:
+
+```sql
+mysql -u root -p -e "SHOW DATABASES;"
+```
+
+3. To create the two necessary databases:
+
+```sql
+mysql -u root -p -e "CREATE DATABASE ab_master;"
+mysql -u root -p -e "CREATE DATABASE db_databox1;"
+```
+
+The database password can be found in the `myvalues.yaml` file.
+
+If the `phraseanet-setup` job does not finish after creating the databases, it may be necessary to manually restart the job. You can do this by temporarily setting `app.phraseanet_setup` to `0` and then back to `1` in the Helm values.
+
+Once the setup is complete, the pods should be in a running state.
+
+![Running Pods](./screenshots/pods-running.png "Running Pods")
+
+### Accessing Phraseanet Frontend
+
+The Phraseanet frontend is not publicly exposed in this setup. However, you can access it locally using Kubernetes **port forwarding**.
 
 Run:
 
@@ -166,18 +201,28 @@ kubectl port-forward svc/phraseanet-gateway 8080:80 -n phraseanet
 
 Now, access the platform at **[http://localhost:8080](http://localhost:8080/)** in your web browser.
 
+Some screenshots of Phraseanet running on EKS:  
+![Loging Page](./screenshots/login-page.png "Login Page")
+
+![Home Page](./screenshots/home-page.png "Home Page")
+
+![Admin Page](./screenshots/admin-page.png "Admin Page")
+
+![Upload Page](./screenshots/upload-page.png "Upload Page")
+
 ## Next Steps
 
 Currently, this deployment covers only the basic setup. Below are some planned improvements for future implementation:
 
-1. Integrate the Kubernetes manifests into Terraform.
-2. Implement **Application Load Balancer (ALB)** using Kubernetes **Ingress**.
-3. Integrate Kubernetes **HPA (Horizontal Pod Autoscaler)** with **Karpenter**.
-4. Implement monitoring via **CloudWatch Stack** or **Kube-Stack (Prometheus + Grafana)**.
-5. Test Phraseanet's **New Relic** integration.
-6. Adapt the infrastructure for **production**:
-    - Use **Amazon RDS** (Managed DB Service).
-    - Use **Amazon ElastiCache** (Managed Redis Service).
-    - Use **Amazon OpenSearch** (Managed Elasticsearch Service).
-    - Use **Amazon MQ** (Managed RabbitMQ Service).
-7. Gain deeper knowledge of **Phraseanet MAM** to design a simple workflow demo.
+1. Integrate the Kubernetes manifests into Terraform. 🚧
+2. Gain basic knowledge about the Phraseanet services, for example uploading and transcoding. 🚧
+3. Implement **Application Load Balancer (ALB)** using Kubernetes **Ingress**. 📋
+4. Integrate Kubernetes **HPA (Horizontal Pod Autoscaler)** with **Karpenter**. 📋
+5. Implement monitoring via **CloudWatch Stack** or **Kube-Stack (Prometheus + Grafana)**. 📋
+6. Test Phraseanet's **New Relic** integration. 📋
+7. Adapt the infrastructure for **production**:
+    - Use **Amazon RDS** (Managed DB Service). 📋
+    - Use **Amazon ElastiCache** (Managed Redis Service). 📋
+    - Use **Amazon OpenSearch** (Managed Elasticsearch Service). 📋
+    - Use **Amazon MQ** (Managed RabbitMQ Service). 📋
+8. Gain deeper knowledge of **Phraseanet MAM** to design a simple workflow demo.

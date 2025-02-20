@@ -5,4 +5,7 @@ resource "helm_release" "phraseanet_stack" {
   create_namespace = true
 
   values = [file("../phraseanet/helm/myvalues.yaml")]
+
+  wait    = false
+  timeout = 300
 }

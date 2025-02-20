@@ -139,9 +139,10 @@ aws eks --region us-west-2 update-kubeconfig \
 
 ## Helm Chart Setup
 
-This setup is done also by terraform when it finishes deploying EKS.
-Though if necessary you can deploy it using a helm client and the `kubeconfig`  for the cluster.
-Here goes the steps.
+This setup is automatically handled by Terraform after it completes the deployment of EKS.
+However, if needed, you can manually deploy it using a Helm client along with the kubeconfig file for the cluster.
+
+Below are the steps to follow:
 ### Steps to Deploy
 
 1. The necessary files are located in the `phraseanet/helm/charts` folder.

@@ -49,15 +49,16 @@ variable "pb_subnets_cidr" {
   type        = list(string)
 }
 
-variable "cluster_name" {
-  description = "Name of the Cluster"
-  type        = string
-  default     = "mam-sandbox"
-}
-
-variable "cluster_version" {
-  description = "Version of the Cluster"
-  type        = string
+variable "cluster" {
+  description = "EKS cluster configuration"
+  type = object({
+    name    = string
+    version = string
+  })
+  default = {
+    name = "mam-sandbox"
+    version = "1.31"
+  }
 }
 
 variable "iam_role_additional_policies" {

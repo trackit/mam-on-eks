@@ -115,6 +115,21 @@ aws secretsmanager create-secret \
 
 Before running Terraform, ensure that your AWS CLI profile is correctly configured with the necessary credentials. Additionally, you need a `.tfvars` file containing the required values. A sample file (`sample.tfvars`) is available in the **terraform** folder.
 
+Create a workspace for your environment:
+
+```bash
+# Replace <env> with the desired environment name for example: sandbox, dev, prod
+terraform workspace new <env>
+```
+
+Then, set the workspace to the desired environment:
+
+```bash
+terraform workspace select <env>
+```
+
+Finally, run the following commands to deploy the infrastructure:
+
 ```bash
 terraform plan --out=plan.out -var-file="sandbox.tfvars"
 terraform apply "plan.out"
@@ -218,12 +233,11 @@ Currently, this deployment covers only the basic setup. Below are some planned i
 1. Integrate the Kubernetes manifests into Terraform. 🚧
 2. Gain basic knowledge about the Phraseanet services, for example uploading and transcoding. 🚧
 3. Implement **Application Load Balancer (ALB)** using Kubernetes **Ingress**. 📋
-4. Integrate Kubernetes **HPA (Horizontal Pod Autoscaler)** with **Karpenter**. 📋
-5. Implement monitoring via **CloudWatch Stack** or **Kube-Stack (Prometheus + Grafana)**. 📋
-6. Test Phraseanet's **New Relic** integration. 📋
-7. Adapt the infrastructure for **production**:
+4. Implement monitoring via **CloudWatch Stack** or **Kube-Stack (Prometheus + Grafana)**. 📋
+5. Test Phraseanet's **New Relic** integration. 📋
+6. Adapt the infrastructure for **production**:
     - Use **Amazon RDS** (Managed DB Service). 📋
     - Use **Amazon ElastiCache** (Managed Redis Service). 📋
     - Use **Amazon OpenSearch** (Managed Elasticsearch Service). 📋
     - Use **Amazon MQ** (Managed RabbitMQ Service). 📋
-8. Gain deeper knowledge of **Phraseanet MAM** to design a simple workflow demo.
+7. Gain deeper knowledge of **Phraseanet MAM** to design a simple workflow demo.

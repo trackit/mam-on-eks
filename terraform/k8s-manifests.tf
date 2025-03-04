@@ -18,3 +18,19 @@ resource "kubectl_manifest" "standard_sc" {
     ]
   }
 }
+
+data "template_file" "standard_ic" {
+  template = file("../phraseanet/k8s-manifests/ingressclass.yaml")
+}
+
+resource "kubectl_manifest" "standard_ic" {
+  yaml_body        = data.template_file.standard_ic.rendered
+  apply_only       = true
+  wait_for_rollout = false
+
+  lifecycle {
+    ignore_changes = [
+      yaml_body
+    ]
+  }
+}

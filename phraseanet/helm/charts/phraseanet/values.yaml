@@ -133,7 +133,7 @@ php:
   cookie_secure: 0
 
 ingress:
-  enabled: false
+  enabled: true
   host: phraseanet
   tls: false
 

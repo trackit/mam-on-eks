@@ -27,4 +27,12 @@ module "vpc" {
     "kubernetes.io/role/elb"                    = "1"
     "kubernetes.io/cluster/${var.cluster.name}" = "owned"
   }
+
+  private_subnet_tags = {
+    Terraform                                   = "true"
+    Environment                                 = var.env
+    KubernetesRole                              = "elb"
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/${var.cluster.name}" = "owned"
+  }
 }

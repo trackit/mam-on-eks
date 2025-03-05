@@ -19,12 +19,12 @@ resource "kubectl_manifest" "standard_sc" {
   }
 }
 
-data "template_file" "standard_ic" {
+data "template_file" "storageclass_template" {
   template = file("../phraseanet/k8s-manifests/ingressclass.yaml")
 }
 
-resource "kubectl_manifest" "standard_ic" {
-  yaml_body        = data.template_file.standard_ic.rendered
+resource "kubectl_manifest" "storageclass_manifest" {
+  yaml_body        = data.template_file.storageclass_template.rendered
   apply_only       = true
   wait_for_rollout = false
 

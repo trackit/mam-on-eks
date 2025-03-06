@@ -56,8 +56,28 @@ variable "cluster" {
     version = string
   })
   default = {
-    name = "mam-sandbox"
+    name    = "mam-sandbox"
     version = "1.31"
+  }
+}
+
+variable "rabbit_mq" {
+  description = "RabbitMQ configuration"
+  type = object({
+    username        = string
+    password        = string
+    name            = string
+    instance_type   = string
+    version         = string
+    deployment_mode = string
+  })
+  default = {
+    username        = "rabbit"
+    password        = "rabbitrabbit"
+    name            = "rabbitmq"
+    instance_type   = "mq.t3.micro"
+    version         = "3.13"
+    deployment_mode = "SINGLE_INSTANCE"
   }
 }
 

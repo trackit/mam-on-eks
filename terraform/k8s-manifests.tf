@@ -19,6 +19,26 @@ resource "kubectl_manifest" "standard_sc" {
   }
 }
 
+data "template_file" "external_rabbitmq_service_template" {
+  template = file("../phraseanet/k8s-manifests/external-rabbitmq-service.yaml.tpl")
+
+  vars = {
+    rabbitmq_host = module.rabbitmq.rabbitmq_broker_ip
+  }
+}
+
+resource "kubectl_manifest" "external_rabbitmq_service_manifest" {
+  yaml_body        = data.template_file.external_rabbitmq_service_template.rendered
+  apply_only       = true
+  wait_for_rollout = false
+
+  lifecycle {
+    ignore_changes = [
+      yaml_body
+    ]
+  }
+}
+
 data "template_file" "storageclass_template" {
   template = file("../phraseanet/k8s-manifests/ingressclass.yaml")
 }

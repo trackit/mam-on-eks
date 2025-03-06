@@ -12,3 +12,11 @@ cluster = {
   name    = "mam-sandbox"
   version = "1.31"
 }
+rabbit_mq = {
+  username        = "rabbit"
+  password        = "rabbitrabbit"
+  name            = "rabbitmq"
+  instance_type   = "mq.t3.micro"
+  version         = "3.13"
+  deployment_mode = "SINGLE_INSTANCE"
+}

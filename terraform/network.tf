@@ -15,6 +15,9 @@ module "vpc" {
   tags = {
     Terraform   = "true"
     Environment = var.env
+
+    # Ensure workspace check logic runs before resources created
+    always_zero = length(null_resource.check_workspace)
   }
 
   public_subnet_tags = {
@@ -22,6 +25,14 @@ module "vpc" {
     Environment                                 = var.env
     KubernetesRole                              = "elb"
     "kubernetes.io/role/elb"                    = "1"
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+    "kubernetes.io/cluster/${var.cluster.name}" = "owned"
+  }
+
+  private_subnet_tags = {
+    Terraform                                   = "true"
+    Environment                                 = var.env
+    KubernetesRole                              = "elb"
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/${var.cluster.name}" = "owned"
   }
 }

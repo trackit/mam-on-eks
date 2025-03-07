@@ -49,15 +49,36 @@ variable "pb_subnets_cidr" {
   type        = list(string)
 }
 
-variable "cluster_name" {
-  description = "Name of the Cluster"
-  type        = string
-  default     = "mam-sandbox"
+variable "cluster" {
+  description = "EKS cluster configuration"
+  type = object({
+    name    = string
+    version = string
+  })
+  default = {
+    name    = "mam-sandbox"
+    version = "1.31"
+  }
 }
 
-variable "cluster_version" {
-  description = "Version of the Cluster"
-  type        = string
+variable "rabbit_mq" {
+  description = "RabbitMQ configuration"
+  type = object({
+    username        = string
+    password        = string
+    name            = string
+    instance_type   = string
+    version         = string
+    deployment_mode = string
+  })
+  default = {
+    username        = "rabbit"
+    password        = "rabbitrabbit"
+    name            = "rabbitmq"
+    instance_type   = "mq.t3.micro"
+    version         = "3.13"
+    deployment_mode = "SINGLE_INSTANCE"
+  }
 }
 
 variable "iam_role_additional_policies" {

@@ -6,20 +6,21 @@ metadata:
     app: phraseanet-gateway
   name: phraseanet-gateway
   {{- template "phraseanet.ingressAnnotations" . }}
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
 spec:
+  ingressClassName: phraseanet-alb
   rules:
-  {{- range .Values.ingress.hosts }}
-  - host: {{ . }}
-    http:
-      paths:
-      - backend:
-          service:
-            name: phraseanet-gateway
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
-  {{- end }}
+    - http:
+        paths:
+          - backend:
+              service:
+                name: phraseanet-gateway
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
 {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}

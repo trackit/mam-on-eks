@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: phraseanet
+spec:
+  type: ExternalName
+  externalName: b-c1dda7ec-b3f5-45ed-9043-e569cbcd1e82.mq.us-west-2.amazonaws.com
+  ports:
+  - port: 5671
+    targetPort: 5671
+  selector:
+    app: phraseanet
+    tier: rabbitmq

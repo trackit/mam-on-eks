@@ -133,7 +133,7 @@ php:
   cookie_secure: 0
 
 ingress:
-  enabled: false
+  enabled: true
   host: phraseanet
   tls: false
 
@@ -206,11 +206,11 @@ app:
   phraseanet_elasticsearch_host: elasticsearch
   phraseanet_elasticsearch_port: 9200
   phraseanet_rabbitmq_host: rabbitmq
-  phraseanet_rabbitmq_port: 5672
-  phraseanet_rabbitmq_ssl: false
+  phraseanet_rabbitmq_port: 5671
+  phraseanet_rabbitmq_ssl: true
   phraseanet_rabbitmq_vhost: /
   phraseanet_rabbitmq_user: rabbit
-  phraseanet_rabbitmq_pass: rabbit
+  phraseanet_rabbitmq_pass: rabbitrabbit
   phraseanet_session_type: redis
   phraseanet_session_host: redis-session
   phraseanet_session_port: 6379

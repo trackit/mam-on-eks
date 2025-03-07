@@ -5,10 +5,7 @@ metadata:
   namespace: phraseanet
 spec:
   type: ExternalName
-  externalName: b-c1dda7ec-b3f5-45ed-9043-e569cbcd1e82.mq.us-west-2.amazonaws.com
-  ports:
-  - port: 5671
-    targetPort: 5671
+  externalName: b-3960377a-4395-4f5a-a8d1-a3c1658e5e2e.mq.us-west-2.amazonaws.com
   selector:
     app: phraseanet
     tier: rabbitmq

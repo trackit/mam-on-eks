@@ -4,8 +4,15 @@ resource "aws_security_group" "mq_sg" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port   = 5672
-    to_port     = 5672
+    from_port   = 5671
+    to_port     = 5671
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 15671
+    to_port     = 15671
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -30,7 +37,12 @@ resource "aws_mq_broker" "rabbitmq_broker" {
   deployment_mode     = var.deployment_mode
   subnet_ids          = var.subnet_ids
   publicly_accessible = false
+  auto_minor_version_upgrade = true
   security_groups     = [aws_security_group.mq_sg.id]
+
+  logs {
+    general = true
+  }
   configuration {
     id       = aws_mq_configuration.rabbitmq_broker_config.id
     revision = aws_mq_configuration.rabbitmq_broker_config.latest_revision
@@ -40,16 +52,14 @@ resource "aws_mq_broker" "rabbitmq_broker" {
     password = var.password
   }
 
-  auto_minor_version_upgrade = true
   maintenance_window_start_time {
     day_of_week = "SUNDAY"
-    time_of_day = "20:00"
+    time_of_day = "03:00"
     time_zone   = "UTC"
   }
 
   apply_immediately = true
 }
-
 resource "aws_mq_configuration" "rabbitmq_broker_config" {
   description    = "RabbitMQ config"
   name           = "${var.name}-config"

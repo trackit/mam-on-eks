@@ -81,6 +81,24 @@ variable "rabbit_mq" {
   }
 }
 
+variable "database" {
+  description = "Database configuration"
+  type = object({
+    identifier    = string
+    instance_type = string
+    storage       = number
+    username      = string
+    password      = string
+  })
+  default = {
+    identifier    = "mam-sandbox"
+    instance_type = "db.t3.micro"
+    storage       = 5
+    username      = "root"
+    password      = "phraseanet"
+  }
+}
+
 variable "iam_role_additional_policies" {
   description = "Additional policies for the cluster role"
   type        = map(string)

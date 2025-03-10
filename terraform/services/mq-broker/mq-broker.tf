@@ -26,6 +26,7 @@ resource "aws_security_group" "mq_sg" {
 
   tags = {
     Name = "${var.name}-security-group"
+    Owner = var.owner
   }
 }
 

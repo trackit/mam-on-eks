@@ -20,3 +20,10 @@ rabbit_mq = {
   version         = "3.13"
   deployment_mode = "SINGLE_INSTANCE"
 }
+database = {
+  identifier    = "mam-sandbox"
+  instance_type = "db.t3.micro"
+  storage       = 5
+  username      = "root"
+  password      = "phraseanet"
+}

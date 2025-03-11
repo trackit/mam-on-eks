@@ -4,6 +4,16 @@ resource "helm_release" "phraseanet_stack" {
   namespace        = "phraseanet"
   create_namespace = true
 
+  set {
+    name  = "app.phraseanet_db_host"
+    value = module.database.rds_address
+  }
+
+  set {
+    name  = "app.phraseanet_rabbitmq_host"
+    value = module.rabbitmq.rabbitmq_broker_ip
+  }
+
   values = [file("../phraseanet/helm/myvalues.yaml")]
 
   wait    = false

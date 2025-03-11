@@ -15,6 +15,7 @@ module "rabbitmq" {
 
 module "database" {
   source              = "./services/rds-database"
+  name                = var.database.name
   identifier          = var.database.identifier
   instance_type       = var.database.instance_type
   storage             = var.database.storage

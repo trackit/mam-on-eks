@@ -1,6 +1,6 @@
 resource "aws_db_instance" "database" {
   identifier                = var.identifier
-  db_name                   = var.identifier
+  db_name                   = var.name
   instance_class            = var.instance_type
   allocated_storage         = var.storage
   engine                    = "mysql"

@@ -45,3 +45,9 @@ variable "skip_final_snapshot" {
   type        = bool
   default     = true
 }
+
+variable "name" {
+  description = "Name of the database"
+  type        = string
+  default     = "mamsandbox"
+}

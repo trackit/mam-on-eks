@@ -1,24 +1,22 @@
 resource "aws_db_instance" "database" {
-  identifier             = var.identifier
-  instance_class         = var.instance_type
-  allocated_storage      = var.storage
-  engine                 = "mysql"
-  engine_version         = "8.0.25"
-  username               = var.username
-  password               = var.password
-  db_subnet_group_name   = aws_db_subnet_group.eks_shared.name
-  parameter_group_name   = aws_db_parameter_group.database_parameter_group.name
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  identifier                = var.identifier
+  db_name                   = var.identifier
+  instance_class            = var.instance_type
+  allocated_storage         = var.storage
+  engine                    = "mysql"
+  engine_version            = "8.0.40"
+  username                  = var.username
+  password                  = var.password
+  db_subnet_group_name      = aws_db_subnet_group.eks_shared.name
+  parameter_group_name      = aws_db_parameter_group.database_parameter_group.name
+  vpc_security_group_ids    = [aws_security_group.rds_sg.id]
+  final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.identifier}-final-snapshot"
+  skip_final_snapshot       = true
 }
 
 resource "aws_db_parameter_group" "database_parameter_group" {
   name   = "database-parameter-group"
   family = "mysql8.0"
-
-  parameter {
-    name  = "log_connections"
-    value = "1"
-  }
 }
 
 resource "aws_db_subnet_group" "eks_shared" {

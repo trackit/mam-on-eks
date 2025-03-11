@@ -39,3 +39,9 @@ variable "vpc_id" {
   description = "VPC ID"
   type        = string
 }
+
+variable "skip_final_snapshot" {
+  description = "Skip final snapshot"
+  type        = bool
+  default     = true
+}

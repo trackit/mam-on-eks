@@ -26,4 +26,5 @@ database = {
   storage       = 5
   username      = "root"
   password      = "phraseanet"
+  skip_final_snapshot = true
 }

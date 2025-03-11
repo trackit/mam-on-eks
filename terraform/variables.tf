@@ -84,18 +84,20 @@ variable "rabbit_mq" {
 variable "database" {
   description = "Database configuration"
   type = object({
-    identifier    = string
-    instance_type = string
-    storage       = number
-    username      = string
-    password      = string
+    identifier          = string
+    instance_type       = string
+    storage             = number
+    username            = string
+    password            = string
+    skip_final_snapshot = bool
   })
   default = {
-    identifier    = "mam-sandbox"
-    instance_type = "db.t3.micro"
-    storage       = 5
-    username      = "root"
-    password      = "phraseanet"
+    identifier          = "mam-sandbox"
+    instance_type       = "db.t3.micro"
+    storage             = 5
+    username            = "root"
+    password            = "phraseanet"
+    skip_final_snapshot = true
   }
 }
 

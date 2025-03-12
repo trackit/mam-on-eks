@@ -28,3 +28,7 @@ database = {
   password      = "phraseanet"
   skip_final_snapshot = true
 }
+elasticache = {
+  cluster_id = "mam-sandbox"
+  node_type  = "cache.t3.micro"
+}

@@ -14,6 +14,11 @@ resource "helm_release" "phraseanet_stack" {
     value = module.rabbitmq.rabbitmq_broker_ip
   }
 
+  set {
+    name  = "app.phraseanet_cache_host"
+    value = module.elasticache.primary_endpoint
+  }
+
   values = [file("../phraseanet/helm/myvalues.yaml")]
 
   wait    = false

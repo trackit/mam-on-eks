@@ -26,3 +26,12 @@ module "database" {
   vpc_id              = module.vpc.vpc_id
   skip_final_snapshot = var.database.skip_final_snapshot
 }
+
+module "elasticache" {
+  source          = "./services/elasticache"
+  cluster_id      = var.elasticache.cluster_id
+  node_type       = var.elasticache.node_type
+  pv_subnets_cidr = module.vpc.private_subnets
+  vpc_id          = module.vpc.vpc_id
+  owner           = var.owner
+}

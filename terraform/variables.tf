@@ -103,6 +103,18 @@ variable "database" {
   }
 }
 
+variable "elasticache" {
+  description = "Elasticache configuration"
+  type = object({
+    cluster_id = string
+    node_type  = string
+  })
+  default = {
+    cluster_id = "mam-sandbox"
+    node_type  = "cache.t3.micro"
+  }
+}
+
 variable "iam_role_additional_policies" {
   description = "Additional policies for the cluster role"
   type        = map(string)

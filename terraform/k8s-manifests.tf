@@ -31,16 +31,8 @@ resource "kubectl_manifest" "storageclass_manifest" {
   }
 }
 
-data "template_file" "external_rabbitmq_service_template" {
-  template = file("../phraseanet/k8s-manifests/external-rabbitmq-service.yaml.tpl")
-
-  vars = {
-    rabbitmq_host = module.rabbitmq.rabbitmq_broker_ip
-  }
-}
-
-resource "kubectl_manifest" "external_rabbitmq_service_manifest" {
-  yaml_body        = data.template_file.external_rabbitmq_service_template.rendered
+resource "kubectl_manifest" "namespace_manifest" {
+  yaml_body        = file("../phraseanet/k8s-manifests/namespace.yaml")
   apply_only       = true
   wait_for_rollout = false
 

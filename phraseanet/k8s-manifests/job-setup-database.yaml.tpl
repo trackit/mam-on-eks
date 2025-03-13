@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mysql-create-dbs
+  name: phraseanet-mysql-create-dbs
   namespace: phraseanet
 spec:
   template:

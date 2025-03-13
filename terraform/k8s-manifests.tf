@@ -19,12 +19,8 @@ resource "kubectl_manifest" "standard_sc" {
   }
 }
 
-data "template_file" "storageclass_template" {
-  template = file("../phraseanet/k8s-manifests/ingressclass.yaml")
-}
-
 resource "kubectl_manifest" "storageclass_manifest" {
-  yaml_body        = data.template_file.storageclass_template.rendered
+  yaml_body        = file("../phraseanet/k8s-manifests/ingressclass.yaml")
   apply_only       = true
   wait_for_rollout = false
 

@@ -63,28 +63,28 @@ elasticsearch:
 
 rabbitmq:
   enabled: true
-  port: "{{ .Values.app.phraseanet_rabbitmq_port }}"
-  default_user: "{{ .Values.app.phraseanet_rabbitmq_user }}"
-  default_pass: "{{ .Values.app.phraseanet_rabbitmq_pass }}"
-  default_vhost: "{{ .Values.app.phraseanet_rabbitmq_vhost }}"
-  node_name: rabbit@rabbitmq
-  heartbeat: 60
-  runAsUser:
-  runAsGroup:
-  persistence:
-    enabled: true
-    existingClaim:
-    storageClass: standard
-    annotations: {}
-    accessMode: ReadWriteOnce
-    size: 1Gi
-  resources:
-    requests:
-      cpu: "50m"
-      memory: "256Mi"
-    limits:
-      cpu: "2000m"
-      memory: "4096Mi"
+  # port: "{{ .Values.app.phraseanet_rabbitmq_port }}"
+  # default_user: "{{ .Values.app.phraseanet_rabbitmq_user }}"
+  # default_pass: "{{ .Values.app.phraseanet_rabbitmq_pass }}"
+  # default_vhost: "{{ .Values.app.phraseanet_rabbitmq_vhost }}"
+  # node_name: rabbit@rabbitmq
+  # heartbeat: 60
+  # runAsUser:
+  # runAsGroup:
+  # persistence:
+  #   enabled: true
+  #   existingClaim:
+  #   storageClass: standard
+  #   annotations: {}
+  #   accessMode: ReadWriteOnce
+  #   size: 1Gi
+  # resources:
+  #   requests:
+  #     cpu: "50m"
+  #     memory: "256Mi"
+  #   limits:
+  #     cpu: "2000m"
+  #     memory: "4096Mi"
 
 externalservice:
   pusher:
@@ -119,7 +119,7 @@ php:
   fpm_pm_type: "dynamic"
   fpm_maxchildren: 9
   fpm_startservers: 3
-  fpm_minspareserver: 2 
+  fpm_minspareserver: 2
   fpm_maxspareserver: 4
   fpm_max_requests: 1000
   newrelic_enabled: false
@@ -133,7 +133,7 @@ php:
   cookie_secure: 0
 
 ingress:
-  enabled: false
+  enabled: true
   host: phraseanet
   tls: false
 

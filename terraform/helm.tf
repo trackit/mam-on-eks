@@ -19,6 +19,11 @@ resource "helm_release" "phraseanet_stack" {
     value = module.elasticache.primary_endpoint
   }
 
+  set {
+    name  = "app.phraseanet_elasticsearch_host"
+    value = module.elasticsearch.elasticsearch_endpoint
+  }
+
   values = [file("../phraseanet/helm/myvalues.yaml")]
 
   wait    = false

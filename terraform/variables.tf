@@ -115,6 +115,20 @@ variable "elasticache" {
   }
 }
 
+variable "elasticsearch" {
+  description = "Elasticsearch configuration"
+  type = object({
+    name          = string
+    instance_type = string
+    volume_size   = number
+  })
+  default = {
+    name          = "mam-sandbox"
+    instance_type = "t3.small.elasticsearch"
+    volume_size   = 10
+  }
+}
+
 variable "iam_role_additional_policies" {
   description = "Additional policies for the cluster role"
   type        = map(string)

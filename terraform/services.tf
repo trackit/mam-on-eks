@@ -35,3 +35,12 @@ module "elasticache" {
   vpc_id          = module.vpc.vpc_id
   owner           = var.owner
 }
+
+module "elasticsearch" {
+  source          = "./services/elasticsearch"
+  name            = var.elasticsearch.name
+  instance_type   = var.elasticsearch.instance_type
+  pv_subnets_cidr = module.vpc.private_subnets
+  vpc_id          = module.vpc.vpc_id
+  owner           = var.owner
+}

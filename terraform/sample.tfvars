@@ -21,14 +21,19 @@ rabbit_mq = {
   deployment_mode = "SINGLE_INSTANCE"
 }
 database = {
-  identifier    = "mam-sandbox"
-  instance_type = "db.t3.micro"
-  storage       = 5
-  username      = "root"
-  password      = "phraseanet"
+  identifier          = "mam-sandbox"
+  instance_type       = "db.t3.micro"
+  storage             = 5
+  username            = "root"
+  password            = "phraseanet"
   skip_final_snapshot = true
 }
 elasticache = {
   cluster_id = "mam-sandbox"
   node_type  = "cache.t3.micro"
+}
+elasticsearch = {
+  name          = "mam-sandbox"
+  instance_type = "t3.small.elasticsearch"
+  volume_size   = 10
 }

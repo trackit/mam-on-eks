@@ -62,7 +62,7 @@ elasticsearch:
     size: 1Gi
 
 rabbitmq:
-  enabled: false
+  enabled: true
 #   port: "{{ .Values.app.phraseanet_rabbitmq_port }}"
 #   default_user: "{{ .Values.app.phraseanet_rabbitmq_user }}"
 #   default_pass: "{{ .Values.app.phraseanet_rabbitmq_pass }}"

@@ -61,8 +61,8 @@ elasticsearch:
     subPath:
     size: 1Gi
 
-# rabbitmq:
-#   enabled: true
+rabbitmq:
+  enabled: true
 #   port: "{{ .Values.app.phraseanet_rabbitmq_port }}"
 #   default_user: "{{ .Values.app.phraseanet_rabbitmq_user }}"
 #   default_pass: "{{ .Values.app.phraseanet_rabbitmq_pass }}"
@@ -195,7 +195,7 @@ app:
   phraseanet_admin_account_id:
   phraseanet_admin_account_email: admin@alchemy.fr
   phraseanet_admin_account_password: phraseanet
-  phraseanet_db_host: db
+  phraseanet_db_host: mam-sandbox.cifgalpx8ots.us-west-2.rds.amazonaws.com
   phraseanet_db_port: 3306
   phraseanet_db_user: root
   phraseanet_db_password: phraseanet

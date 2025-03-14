@@ -37,3 +37,8 @@ variable "vpc_id" {
   description = "VPC ID for the RabbitMQ broker"
   type        = string
 }
+
+variable "owner" {
+  description = "Owner of the RabbitMQ broker"
+  type        = string
+}

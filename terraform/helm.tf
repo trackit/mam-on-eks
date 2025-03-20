@@ -26,6 +26,13 @@ resource "helm_release" "phraseanet_stack" {
 
   values = [file("../phraseanet/helm/myvalues.yaml")]
 
+  depends_on = [
+    module.database,
+    module.rabbitmq,
+    module.elasticache,
+    module.elasticsearch
+  ]
+
   wait    = false
   timeout = 300
 }

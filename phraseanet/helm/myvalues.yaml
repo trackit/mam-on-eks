@@ -67,7 +67,7 @@ rabbitmq:
   default_user: "{{ .Values.app.phraseanet_rabbitmq_user }}"
   default_pass: "{{ .Values.app.phraseanet_rabbitmq_pass }}"
   default_vhost: "{{ .Values.app.phraseanet_rabbitmq_vhost }}"
-  node_name: rabbit@rabbitmq
+  node_name: "rabbit@{{ .Values.app.phraseanet_rabbitmq_host }}"
   heartbeat: 60
   runAsUser:
   runAsGroup:

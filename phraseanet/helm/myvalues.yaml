@@ -136,6 +136,11 @@ ingress:
   enabled: true
   host: phraseanet
   tls: false
+  annotations:
+    alb.ingress.kubernetes.io/ingress-class: "phraseanet-alb"
+    alb.ingress.kubernetes.io/tags: "Name=phraseanet-alb,Owner=YourName,Project=mam-on-eks"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
 
 saml:
   enabled: false

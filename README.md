@@ -1,4 +1,4 @@
-# MAM Inside EKS
+# MAM on EKS
 
 This documentation provides steps to deploy **Phraseanet** using **Kubernetes** instead of **Docker Compose**.
 
@@ -42,24 +42,14 @@ The `gateway`, `fpm`, and `setup` services are core components of the platform. 
 
 We are deploying the services on an **EKS (Elastic Kubernetes Service)** cluster within an **AWS account** for testing purposes.
 
-### Initializing Terraform
-
-First, initialize Terraform with the following command:
-
-```bash
-terraform init \
-  -backend-config="bucket=sandbox-tf-states" \
-  -backend-config="key=terraform-sandbox/mam-inside-eks-state" \
-  -backend-config="region=us-west-2" \
-  -backend-config="dynamodb_table=mam-inside-eks-tf-lock-table" \
-  -backend-config="dynamodb_endpoint=https://dynamodb.us-west-2.amazonaws.com"
-```
-
 ### Preparing AWS Resources
 
 This guide assumes a **sandbox environment**, with AWS access configured via the AWS CLI profile `sandbox`.
 
 1. **Create an S3 Bucket for Terraform State:**
+
+The names used are just examples, such as `sandbox-tf-states`, `mam-on-eks-tf-lock-table`, `Leandro Mota`.  
+Change it as desired.  
 
 ```bash
 aws s3api create-bucket \
@@ -74,15 +64,15 @@ aws s3api create-bucket \
 ```bash
 aws s3api put-bucket-tagging \
   --bucket sandbox-tf-states \
-  --tagging 'TagSet=[{Key=Environment,Value=sandbox},{Key=Owner,Value="Leandro Mota"},{Key=Project,Value=mam-inside-eks},{Key=Name,Value=sandbox-tf-states}]' \
+  --tagging 'TagSet=[{Key=Environment,Value=sandbox},{Key=Owner,Value="Leandro Mota"},{Key=Project,Value=mam-on-eks},{Key=Name,Value=sandbox-tf-states}]' \
   --profile sandbox
 ```
 
-1. **Create a DynamoDB Table for Terraform Locking:**
+1. **Create a DynamoDB Table for Terraform Locking (Optional):**
 
 ```bash
 aws dynamodb create-table \
-  --table-name mam-inside-eks-tf-lock-table \
+  --table-name mam-on-eks-tf-lock-table \
   --attribute-definitions AttributeName=LockID,AttributeType=S \
   --key-schema AttributeName=LockID,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST \
@@ -94,28 +84,47 @@ aws dynamodb create-table \
 
 ```bash
 aws dynamodb tag-resource \
-  --resource-arn arn:aws:dynamodb:us-west-2:576872909007:table/mam-inside-eks-tf-lock-table \
-  --tags Key=Name,Value=mam-inside-eks-tf-lock-table Key=Environment,Value=sandbox Key=Owner,Value="Leandro Mota" Key=Project,Value=mam-inside-eks \
+  --resource-arn arn:aws:dynamodb:us-west-2:<YOUR_AWS_ACCOUNT_ID>:table/mam-on-eks-tf-lock-table \
+  --tags Key=Name,Value=mam-on-eks-tf-lock-table Key=Environment,Value=sandbox Key=Owner,Value="Leandro Mota" Key=Project,Value=mam-on-eks \
   --region us-west-2 \
   --profile sandbox
 ```
 
-3. **Create a Secret for Terraform Variables in AWS Secrets Manager:**
+3. **Create a Secret for Terraform Variables in AWS Secrets Manager(Optional):**
 
 ```bash
 aws secretsmanager create-secret \
   --region "us-west-2" \
   --profile sandbox \
-  --name "eks-in-mam-tfvars" \
+  --name "mam-on-eks-tfvars" \
   --secret-string file://sandbox.tfvars \
-  --tags '[{"Key":"Name", "Value":"eks-in-mam-tfvars"}, {"Key":"Owner", "Value":"Leandro Mota"}, {"Key":"Project", "Value":"mam-inside-eks"}]'
+  --tags '[{"Key":"Name", "Value":"mam-on-eks-tfvars"}, {"Key":"Owner", "Value":"Leandro Mota"}, {"Key":"Project", "Value":"mam-on-eks"}]'
 ```
 
 ### Running Terraform
 
 Before running Terraform, ensure that your AWS CLI profile is correctly configured with the necessary credentials. Additionally, you need a `.tfvars` file containing the required values. A sample file (`sample.tfvars`) is available in the **terraform** folder.
 
-Create a workspace for your environment:
+### Initializing Terraform
+
+First, initialize Terraform with the following command:
+
+```bash
+terraform init \
+  -backend-config="bucket=sandbox-tf-states" \
+  -backend-config="key=terraform-sandbox/mam-on-eks-state" \
+  -backend-config="region=us-west-2" \
+  -backend-config="dynamodb_table=mam-on-eks-tf-lock-table" \
+  -backend-config="dynamodb_endpoint=https://dynamodb.us-west-2.amazonaws.com"
+```
+
+If needed, set the AWS profile environment variable:  
+
+```bash
+export AWS_PROFILE=sandbox
+```
+
+Then, create a workspace for your environment:
 
 ```bash
 # Replace <env> with the desired environment name for example: sandbox, dev, prod
@@ -135,20 +144,14 @@ terraform plan --out=plan.out -var-file="sandbox.tfvars"
 terraform apply "plan.out"
 ```
 
-If needed, set the AWS profile environment variable:
-
-```bash
-export AWS_PROFILE=sandbox
-```
-
 ### Configuring kubeconfig for EKS Access
 
 After deploying the cluster, update your `kubeconfig` file to interact with EKS:
 
 ```bash
 aws eks --region us-west-2 update-kubeconfig \
-  --name mam-sandbox \
-  --kubeconfig ~/.kube/mam-sandbox-config \
+  --name mam-on-eks \
+  --kubeconfig ~/.kube/mam-on-eks-config \
   --profile sandbox
 ```
 

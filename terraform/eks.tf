@@ -6,7 +6,10 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   cluster_addons = {
+    coredns                = {}
     eks-pod-identity-agent = {}
+    # kube-proxy             = {}
+    # vpc-cni                = {}
   }
 
   vpc_id     = local.vpc_id

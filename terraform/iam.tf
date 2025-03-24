@@ -95,3 +95,21 @@ resource "aws_iam_role_policy_attachment" "secrets_manager_role_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
   role       = aws_iam_role.secrets_manager_role.name
 }
+
+# IAM Role to access the ALB Resources
+resource "aws_iam_role" "aws_lb_controller" {
+  name               = "aws-load-balancer-controller-role-${var.env}"
+  assume_role_policy = data.aws_iam_policy_document.aws_lb_controller_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "aws_lb_controller_attach" {
+  role       = aws_iam_role.aws_lb_controller.name
+  policy_arn = aws_iam_policy.aws_lb_controller.arn
+}
+
+resource "aws_iam_policy" "aws_lb_controller" {
+  name        = "AWSLoadBalancerControllerIAMPolicy-${var.env}"
+  description = "IAM policy for AWS Load Balancer Controller"
+  policy      = data.http.aws_lb_controller_policy.response_body
+}
+

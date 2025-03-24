@@ -3,9 +3,16 @@ ingress:
   host: phraseanet
   tls: false
   annotations:
-    alb.ingress.kubernetes.io/ingress-class: "phraseanet-alb"
+    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/tags: "Name=phraseanet-alb,Owner=YourName,Project=mam-on-eks"
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    # alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    # alb.ingress.kubernetes.io/success-codes: 200,201,302
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/success-codes: 200,201,302
+
+app:
+  phraseanet_admin_account_email: leandro@trackit.io
+  phraseanet_admin_account_password: phraseanet
+
+http:
+  gateway_users: "maxime@trackit.io:phraseanet"

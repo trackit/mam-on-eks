@@ -6,6 +6,10 @@ metadata:
 spec:
   ttlSecondsAfterFinished: 420
   template:
+    metadata:
+      labels:
+        app: phraseanet-setup
+        tier: fpm
     spec:
       {{ if .Values.image.pullSecret.enabled }}
       imagePullSecrets:
@@ -73,8 +77,13 @@ spec:
           mountPath: "/var/alchemy/Phraseanet/ftp"
         - name: phraseanet-backup
           mountPath: "/var/alchemy/Phraseanet/backup"
-
-
+        securityContext:
+          {{- if .Values.app.setup.runAsUser }}
+          runAsUser: {{ .Values.app.setup.runAsUser }}
+          {{- end }}
+          {{- if .Values.app.setup.runAsGroup }}
+          runAsGroup: {{ .Values.app.setup.runAsGroup }}
+          {{- end }}
 
         env:
         - name: STACK_NAME

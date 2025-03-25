@@ -7,6 +7,7 @@ module "eks" {
 
   cluster_addons = {
     eks-pod-identity-agent = {}
+    aws-efs-csi-driver     = {service_account_role_arn = aws_iam_role.efs_csi_role.arn}
   }
 
   vpc_id     = local.vpc_id
@@ -18,15 +19,6 @@ module "eks" {
     node_pools = ["general-purpose"]
     labels = {
       role = "applications"
-    }
-    auto_mode_defaults = {
-      tags = {
-        Name        = var.cluster.name
-        Environment = var.env
-        Terraform   = "true"
-        Owner       = var.owner
-        Project     = var.project
-      }
     }
   }
 

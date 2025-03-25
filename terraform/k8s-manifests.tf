@@ -28,21 +28,6 @@ resource "kubectl_manifest" "standard_sc" {
   depends_on = [time_sleep.wait_for_eks]
 }
 
-# resource "kubectl_manifest" "ingressclass_manifest" {
-#   yaml_body        = file("../phraseanet/k8s-manifests/ingressclass.yaml")
-#   apply_only       = true
-#   wait_for_rollout = false
-
-#   lifecycle {
-#     ignore_changes = [
-#       yaml_body
-#     ]
-#   }
-
-#   # depends_on = [module.eks] 
-#   depends_on = [time_sleep.wait_for_eks]
-# }
-
 data "template_file" "job_setup_database_template" {
   template = file("../phraseanet/k8s-manifests/job-setup-database.yaml.tpl")
 
@@ -79,4 +64,33 @@ metadata:
 YAML
   apply_only       = true
   wait_for_rollout = false
+}
+
+#Storage Class for EFS
+
+resource "kubectl_manifest" "efs_storage_class" {
+  yaml_body = <<YAML
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+  fileSystemId: ${aws_efs_file_system.shared_filesystem.id}
+  provisioningMode: efs-ap
+  directoryPerms: "777"
+reclaimPolicy: Retain
+YAML
+}
+
+resource "kubectl_manifest" "efs_csi_sa" {
+  yaml_body = <<YAML
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: efs-csi-controller-sa
+  namespace: kube-system
+  annotations:
+    eks.amazonaws.com/role-arn: ${aws_iam_role.efs_csi_role.arn}
+YAML
 }

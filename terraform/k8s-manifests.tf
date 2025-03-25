@@ -28,21 +28,6 @@ resource "kubectl_manifest" "standard_sc" {
   depends_on = [time_sleep.wait_for_eks]
 }
 
-# resource "kubectl_manifest" "ingressclass_manifest" {
-#   yaml_body        = file("../phraseanet/k8s-manifests/ingressclass.yaml")
-#   apply_only       = true
-#   wait_for_rollout = false
-
-#   lifecycle {
-#     ignore_changes = [
-#       yaml_body
-#     ]
-#   }
-
-#   # depends_on = [module.eks] 
-#   depends_on = [time_sleep.wait_for_eks]
-# }
-
 data "template_file" "job_setup_database_template" {
   template = file("../phraseanet/k8s-manifests/job-setup-database.yaml.tpl")
 

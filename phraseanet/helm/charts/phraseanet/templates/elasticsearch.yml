@@ -35,6 +35,13 @@ spec:
         terminationMessagePolicy: FallbackToLogsOnError
         resources:
 {{ toYaml .Values.elasticsearch.resources | indent 12 }}
+        securityContext:
+          {{- if .Values.elasticsearch.runAsUser }}
+          runAsUser: {{ .Values.elasticsearch.runAsUser }}
+          {{- end }}
+          {{- if .Values.elasticsearch.runAsGroup }}
+          runAsGroup: {{ .Values.elasticsearch.runAsGroup }}
+          {{- end }}
         volumeMounts:
         - name: elastic-data
           mountPath: "/usr/share/elasticsearch/data"

@@ -1,99 +1,26 @@
-# EKS IAM Resources
-
-# resource "aws_iam_role" "eks_role" {
-#   name = "eks_role_${var.env}"
-
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole"
-#         Principal = {
-#           Service = "ec2.amazonaws.com"
-#         }
-#         Effect = "Allow"
-#         Sid    = ""
-#       },
-#     ]
-#   })
-
-#   tags = {
-#     Environment = var.env
-#     Terraform   = "true"
-#   }
-# }
-
-resource "aws_iam_role_policy_attachment" "ecr_policy_attachment" {
-  for_each   = module.eks.eks_managed_node_groups
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
-  role       = each.value.iam_role_name
-}
-
-resource "aws_iam_role_policy_attachment" "secret_manager_policy_attachment" {
-  for_each   = module.eks.eks_managed_node_groups
-  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
-  role       = each.value.iam_role_name
-}
-
-resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
-  for_each   = module.eks.eks_managed_node_groups
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  role       = each.value.iam_role_name
-}
-
-resource "aws_iam_role_policy_attachment" "efs_policy_attachment" {
-  for_each   = module.eks.eks_managed_node_groups
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
-  role       = each.value.iam_role_name
-}
-
-# resource "aws_iam_role_policy_attachment" "ebs_policy_attachment" {
-#   for_each   = module.eks.eks_managed_node_groups
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-#   role       = each.value.iam_role_name
-# }
-
-# ALB IAM resources
-
-# resource "aws_iam_role" "alb_controller_role" {
-#   name = "AWSLoadBalancerControllerRole-${var.env}"
-
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Principal = {
-#           Service = "eks.amazonaws.com"
-#         },
-#         Action = "sts:AssumeRole"
-#       }
-#     ]
-#   })
-# }
-
-# IAM Role to access the Secrets Manager
-
-resource "aws_iam_role" "secrets_manager_role" {
-  name = "AWSSecretManagerAccessRole-${var.env}"
+resource "aws_iam_role" "efs_csi_role" {
+  name = "${module.eks.cluster_name}-efs-csi-role"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Federated = "${local.oidc_arn}"
-        },
-        Action = "sts:AssumeRoleWithWebIdentity"
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Federated = module.eks.oidc_provider_arn
       }
-    ]
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        "StringEquals" = {
+          "${module.eks.oidc_provider}:sub" = "system:serviceaccount:kube-system:efs-csi-controller-sa"
+        }
+      }
+    }]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "secrets_manager_role_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
-  role       = aws_iam_role.secrets_manager_role.name
+resource "aws_iam_role_policy_attachment" "efs_csi_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+  role       = aws_iam_role.efs_csi_role.name
 }
 
 # IAM Role to access the ALB Resources

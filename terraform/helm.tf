@@ -7,6 +7,12 @@ resource "helm_release" "phraseanet_stack" {
   values = [file("../phraseanet/helm/myvalues.yaml")]
   wait    = false
   timeout = 300
+
+  depends_on = [ 
+    kubectl_manifest.wait_for_nodes_job,
+    kubectl_manifest.standard_sc,
+    helm_release.alb-controller,
+   ]
 }
 
 resource "helm_release" "alb-controller" {
@@ -14,6 +20,9 @@ resource "helm_release" "alb-controller" {
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
+
+  wait    = false
+  timeout = 300
 
   set {
     name  = "region"
@@ -44,5 +53,10 @@ resource "helm_release" "alb-controller" {
     name  = "serviceAccount.name"
     value = "aws-load-balancer-controller"
   }
+
+  depends_on = [ 
+    kubectl_manifest.wait_for_nodes_job,
+    kubectl_manifest.aws_lb_controller_sa
+  ]
 
 }

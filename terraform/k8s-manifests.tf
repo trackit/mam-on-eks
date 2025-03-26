@@ -1,9 +1,3 @@
-resource "time_sleep" "wait_for_eks" {
-  depends_on = [module.eks]
-
-  create_duration = "30s"
-}
-
 data "template_file" "standard_sc" {
   template = file("../phraseanet/k8s-manifests/storageclass.yaml.tpl")
 
@@ -25,7 +19,8 @@ resource "kubectl_manifest" "standard_sc" {
   }
 
   # depends_on = [module.eks] 
-  depends_on = [time_sleep.wait_for_eks]
+  # depends_on = [time_sleep.wait_for_eks]
+  depends_on = [ kubectl_manifest.wait_for_nodes_job]
 }
 
 data "template_file" "job_setup_database_template" {
@@ -64,4 +59,9 @@ metadata:
 YAML
   apply_only       = true
   wait_for_rollout = false
+
+depends_on = [ 
+  kubectl_manifest.wait_for_nodes_job
+ ]
+
 }

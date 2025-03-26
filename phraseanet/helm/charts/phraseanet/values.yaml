@@ -26,6 +26,7 @@ mysql:
   max_allowed_packet: 16M
   max_connection: 100
   pvc_name: phraseanet-database
+  pvc_conf_name: phraseanet-database-conf
   resources:
     requests:
       cpu: "50m"
@@ -33,6 +34,8 @@ mysql:
     limits:
       cpu: "2000m"
       memory: "4096Mi"
+  runAsUser:
+  runAsGroup:
   persistence:
     enabled: true
     existingClaim:
@@ -52,6 +55,8 @@ elasticsearch:
     limits:
       cpu: "2000m"
       memory: "4096Mi"
+  runAsUser:
+  runAsGroup:
   persistence:
     enabled: true
     existingClaim:
@@ -500,3 +505,6 @@ app:
       config: phraseanet-config
       ftp: phraseanet-ftp
       backup: phraseanet-backup
+  setup:
+    runAsUser:
+    runAsGroup:

@@ -44,3 +44,30 @@ module "eks" {
     always_zero = length(null_resource.check_workspace)
   }
 }
+
+resource "kubectl_manifest" "wait_for_nodes_job" {
+  yaml_body = <<YAML
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dummy-job
+spec:
+  template:
+    metadata:
+      labels:
+        app: dummy
+    spec:
+      nodeSelector:
+        topology.kubernetes.io/zone: ${var.aws_region}c
+      containers:
+      - name: dummy
+        image: busybox
+        command:
+          - "/bin/sh"
+          - "-c"
+          - "echo 'Give me a node'"
+      restartPolicy: Never
+YAML
+
+  depends_on = [module.eks]
+}

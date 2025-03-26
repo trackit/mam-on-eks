@@ -24,6 +24,9 @@ spec:
       - name: database
         persistentVolumeClaim:
           claimName: {{ .Values.mysql.pvc_name }}
+      - name: database-conf
+        persistentVolumeClaim:
+          claimName: {{ .Values.mysql.pvc_conf_name }}
       {{ if .Values.image.pullSecret.enabled }}
       imagePullSecrets:
       - name: {{ .Values.image.pullSecret.name }}
@@ -44,7 +47,16 @@ spec:
           value: {{ .Values.mysql.max_allowed_packet }}
         - name: MYSQL_MAX_CONNECTION
           value: {{ .Values.mysql.max_connection | quote }}
+        securityContext:
+          {{- if .Values.mysql.runAsUser }}
+          runAsUser: {{ .Values.mysql.runAsUser }}
+          {{- end }}
+          {{- if .Values.mysql.runAsGroup }}
+          runAsGroup: {{ .Values.mysql.runAsGroup }}
+          {{- end }}
         volumeMounts:
         - name: "database"
           mountPath: "/var/lib/mysql"
+        - name: "database-conf"
+          mountPath: "/etc/mysql/conf.d/"
 {{- end }}

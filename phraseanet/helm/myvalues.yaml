@@ -8,11 +8,28 @@ ingress:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/success-codes: 200,201,302
+    alb.ingress.kubernetes.io/success-codes: 200,201
 
 app:
   phraseanet_admin_account_email: leandro@trackit.io
   phraseanet_admin_account_password: phraseanet
 
-http:
-  gateway_users: "maxime@trackit.io:phraseanet"
+nodeSelector: 
+  topology.kubernetes.io/zone: us-west-2c
+
+# rabbitmq:
+#   runAsUser: 999
+#   runAsGroup: 999
+
+# elasticsearch:
+#   runAsUser: 1000
+#   runAsGroup: 1000
+
+# mysql:
+#   runAsUser: 999
+#   runAsGroup: 999
+
+# app:
+#   setup:
+#     runAsUser: 999
+#     runAsGroup: 999

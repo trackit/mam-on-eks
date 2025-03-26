@@ -37,7 +37,6 @@ spec:
         volumeMounts:
         - name: data
           mountPath: "/var/lib/rabbitmq"
-        {{- if or .Values.rabbitmq.runAsUser .Values.rabbitmq.runAsGroup }}
         securityContext:
           {{- if .Values.rabbitmq.runAsUser }}
           runAsUser: {{ .Values.rabbitmq.runAsUser }}
@@ -45,7 +44,6 @@ spec:
           {{- if .Values.rabbitmq.runAsGroup }}
           runAsGroup: {{ .Values.rabbitmq.runAsGroup }}
           {{- end }}
-        {{- end }}
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: {{ tpl .Values.rabbitmq.default_user $ | quote }}

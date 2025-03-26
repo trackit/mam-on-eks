@@ -48,3 +48,24 @@ resource "aws_security_group" "rds_sg" {
     Owner = var.owner
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "rds_cpu_alarm" {
+  alarm_name                = "rds_cpu_utilization_alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = "2"
+  metric_name               = "CPUUtilization"
+  namespace                 = "AWS/RDS"
+  period                    = "300"
+  statistic                 = "Average"
+  threshold                 = "80"
+  alarm_description         = "This metric monitors RDS CPU utilization"
+  insufficient_data_actions = []
+
+  dimensions = {
+    DBInstanceIdentifier = aws_db_instance.database.identifier
+  }
+
+  alarm_actions = [
+    var.sns_topic_arn
+  ]
+}

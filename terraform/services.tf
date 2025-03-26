@@ -25,6 +25,7 @@ module "database" {
   owner               = var.owner
   vpc_id              = module.vpc.vpc_id
   skip_final_snapshot = var.database.skip_final_snapshot
+  sns_topic_arn       = aws_sns_topic.mam_sns_topic.arn 
 }
 
 module "elasticache" {

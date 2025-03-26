@@ -51,3 +51,8 @@ variable "name" {
   type        = string
   default     = "mamsandbox"
 }
+
+variable "sns_topic_arn" {
+  description = "The arn for the sns topic"
+  type        = string
+}

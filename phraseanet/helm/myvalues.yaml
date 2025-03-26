@@ -15,7 +15,7 @@ app:
   phraseanet_admin_account_password: phraseanet
 
 nodeSelector: 
-  topology.ebs.csi.eks.amazonaws.com/zone: us-west-2c
+  topology.kubernetes.io/zone: us-west-2c
 
 # rabbitmq:
 #   runAsUser: 999

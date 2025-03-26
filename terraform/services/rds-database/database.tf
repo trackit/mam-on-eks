@@ -12,6 +12,11 @@ resource "aws_db_instance" "database" {
   vpc_security_group_ids    = [aws_security_group.rds_sg.id]
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.identifier}-final-snapshot"
   skip_final_snapshot       = true
+
+  tags = {
+    Owner = var.owner
+    Project = var.project
+  }
 }
 
 resource "aws_db_parameter_group" "database_parameter_group" {
@@ -46,6 +51,7 @@ resource "aws_security_group" "rds_sg" {
   tags = {
     Name  = "rds-sg"
     Owner = var.owner
+    Project = var.project
   }
 }
 

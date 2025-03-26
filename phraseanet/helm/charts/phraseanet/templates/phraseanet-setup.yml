@@ -4,7 +4,6 @@ kind: Job
 metadata:
   name: phraseanet-setup
 spec:
-  ttlSecondsAfterFinished: 420
   template:
     metadata:
       labels:

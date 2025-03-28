@@ -85,3 +85,58 @@ module "eks" {
     always_zero = length(null_resource.check_workspace)
   }
 }
+
+resource "aws_iam_role" "cloudwatch_agent_role" {
+  name = "${var.project}-eks-cloudwatch-agent-role"
+  tags = {
+    Name        = "${var.project}-eks-cloudwatch-agent-role"
+    Environment = var.env
+    Owner       = var.owner
+    Project     = var.project
+  }
+  assume_role_policy = jsonencode({
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": [
+                    "pods.eks.amazonaws.com"
+                ]
+            },
+            "Action": [
+                "sts:AssumeRole",
+                "sts:TagSession"
+            ]
+        }
+    ]
+  })
+}
+
+resource "kubernetes_service_account" "cloudwatch_agent_sa" {
+  metadata {
+    name      = "cloudwatch-agent"
+    namespace = "phraseanet"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.cloudwatch_agent_role.arn
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "CloudWatchAgentServerPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.cloudwatch_agent_role.name
+}
+
+resource "aws_eks_addon" "amazon_cloudwatch_observability" {
+
+  cluster_name  = var.cluster.name
+  addon_name    = "amazon-cloudwatch-observability"
+
+  configuration_values = file("${path.module}/configs/amazon-cloudwatch-observability.json")
+
+  pod_identity_association {
+    role_arn = aws_iam_role.cloudwatch_agent_role.arn
+    service_account = kubernetes_service_account.cloudwatch_agent_sa.metadata.0.name
+  }
+}

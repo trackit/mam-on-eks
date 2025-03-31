@@ -19,6 +19,11 @@ variable "owner" {
   type        = string
 }
 
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
 variable "instance_type" {
   description = "Instance type for the ElasticSearch cluster"
   type        = string

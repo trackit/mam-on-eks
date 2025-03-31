@@ -2,6 +2,7 @@
 profile            = "sandbox"
 env                = "sandbox"
 owner              = "Leandro Mota"
+email              = "example@example.com"
 project            = "mam-inside-eks"
 vpc_name           = "vpc-mam-sandbox"
 cidr               = "10.1.0.0/16"

@@ -44,6 +44,7 @@ POLICY
   tags = {
     Domain = var.name
     Owner  = var.owner
+    Project = var.project
   }
 }
 

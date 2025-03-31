@@ -21,6 +21,11 @@ resource "aws_elasticache_replication_group" "elasticache" {
     log_format       = "text"
     log_type         = "engine-log"
   }
+
+  tags = {
+    Owner = var.owner
+    Project = var.project
+  }
 }
 
 resource "aws_elasticache_parameter_group" "valkey_param_group" {
@@ -111,5 +116,6 @@ resource "aws_security_group" "elasticache_sg" {
   tags = {
     Name  = "elasticache-sg"
     Owner = var.owner
+    Project = var.project
   }
 }

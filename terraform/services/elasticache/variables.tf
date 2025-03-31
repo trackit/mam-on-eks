@@ -18,6 +18,11 @@ variable "owner" {
   type        = string
 }
 
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
 variable "node_type" {
   description = "The node type for the Elasticache cluster"
   type        = string

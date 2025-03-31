@@ -19,6 +19,11 @@ variable "owner" {
   type        = string
 }
 
+variable "email" {
+  description = "Email for the alerts"
+  type        = string
+}
+
 variable "project" {
   description = "Resource Owner"
   type        = string

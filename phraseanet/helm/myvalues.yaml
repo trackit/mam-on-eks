@@ -10,10 +10,6 @@ ingress:
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/success-codes: 200,201
 
-app:
-  phraseanet_admin_account_email: leandro@trackit.io
-  phraseanet_admin_account_password: phraseanet
-
 nodeSelector: 
   topology.kubernetes.io/zone: us-west-2c
 

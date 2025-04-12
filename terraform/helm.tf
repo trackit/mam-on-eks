@@ -9,9 +9,8 @@ resource "helm_release" "phraseanet_stack" {
   timeout = 300
 
   depends_on = [ 
-    kubectl_manifest.wait_for_nodes_job,
     kubectl_manifest.standard_sc,
-    helm_release.alb-controller,
+    helm_release.alb-controller
    ]
 }
 
@@ -55,7 +54,6 @@ resource "helm_release" "alb-controller" {
   }
 
   depends_on = [ 
-    kubectl_manifest.wait_for_nodes_job,
     kubectl_manifest.aws_lb_controller_sa
   ]
 

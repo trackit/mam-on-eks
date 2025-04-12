@@ -4,14 +4,49 @@ resource "helm_release" "phraseanet_stack" {
   namespace        = "phraseanet"
   create_namespace = true
 
+  set {
+    name  = "app.phraseanet_db_host"
+    value = module.database.rds_address
+  }
+
+  set {
+    name  = "app.phraseanet_rabbitmq_host"
+    value = module.rabbitmq.rabbitmq_broker_ip
+  }
+
+  set {
+    name  = "app.phraseanet_cache_host"
+    value = module.elasticache.primary_endpoint
+  }
+
+  set {
+    name  = "app.phraseanet_elasticsearch_host"
+    value = module.elasticsearch.elasticsearch_endpoint
+  }
+
+  set {
+    name = "app.phraseanet_admin_account_email"
+    value = var.phraseanet_admin_account_email
+  }
+
+  set {
+    name  = "app.phraseanet_admin_account_password"
+    value = var.phraseanet_admin_account_password
+  }
+
   values = [file("../phraseanet/helm/myvalues.yaml")]
+
+  depends_on = [
+    module.database,
+    module.rabbitmq,
+    module.elasticache,
+    module.elasticsearch,
+    kubectl_manifest.standard_sc,
+    helm_release.alb-controller,
+  ]
+
   wait    = false
   timeout = 300
-
-  depends_on = [ 
-    kubectl_manifest.standard_sc,
-    helm_release.alb-controller
-   ]
 }
 
 resource "helm_release" "alb-controller" {

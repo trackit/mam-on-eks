@@ -5,6 +5,26 @@ resource "helm_release" "phraseanet_stack" {
   create_namespace = true
 
   set {
+    name  = "mysql.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "elasticsearch.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "rabbitmq.enabled"
+    value = "false"
+  }
+
+  set {
+    name = "redis.enabled"
+    value = "false"
+  }
+
+  set {
     name  = "app.phraseanet_db_host"
     value = module.database.rds_address
   }
@@ -12,6 +32,26 @@ resource "helm_release" "phraseanet_stack" {
   set {
     name  = "app.phraseanet_rabbitmq_host"
     value = module.rabbitmq.rabbitmq_broker_ip
+  }
+
+  set {
+    name = "app.phraseanet_rabbitmq_user"
+    value = var.rabbit_mq.username
+  }
+
+  set {
+    name = "app.phraseanet_rabbitmq_pass"
+    value = var.rabbit_mq.password
+  }
+
+  set {
+    name = "app.phraseanet_rabbitmq_ssl"
+    value = "true"
+  }
+
+  set {
+    name = "app.phraseanet_rabbitmq_port"
+    value = "5671"
   }
 
   set {

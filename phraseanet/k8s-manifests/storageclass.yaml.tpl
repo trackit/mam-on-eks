@@ -8,6 +8,6 @@ parameters:
   type: gp2
   tagSpecification_1: "Owner=${owner}"
   tagSpecification_2: "Project=${project}"
-  # tagSpecification_3: "Name=eks-nodes-storage"
+  tagSpecification_3: "Name=eks-nodes-storage"
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer

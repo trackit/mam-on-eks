@@ -62,3 +62,4 @@ resource "aws_iam_policy" "aws_lb_controller" {
   description = "IAM policy for AWS Load Balancer Controller"
   policy      = data.http.aws_lb_controller_policy.response_body
 }
+

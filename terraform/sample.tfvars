@@ -1,7 +1,7 @@
 # This file is a sample of the variables that you can use to create the EKS cluster.
-profile            = "production"
-env                = "prd"
-owner              = "Leandro Mota"
+profile            = "sandbox"
+env                = "sandbox"
+owner              = "Your Name" #Change it for the name of the person running terraform
 project            = "mam-on-eks"
 vpc_name           = "vpc-mam-on-eks"
 cidr               = "10.1.0.0/16"
@@ -13,30 +13,4 @@ phraseanet_admin_account_password = "phraseanet"
 cluster = {
   name    = "mam-on-eks"
   version = "1.31"
-}
-rabbit_mq = {
-  username        = "rabbit"
-  password        = "rabbitrabbit"
-  name            = "rabbitmq"
-  instance_type   = "mq.t3.micro"
-  version         = "3.13"
-  deployment_mode = "SINGLE_INSTANCE"
-}
-database = {
-  name                = "mamdb"
-  identifier          = "mam-on-eks"
-  instance_type       = "db.t3.micro"
-  storage             = 5
-  username            = "root"
-  password            = "phraseanet"
-  skip_final_snapshot = true
-}
-elasticache = {
-  cluster_id = "mam-on-eks"
-  node_type  = "cache.t3.micro"
-}
-elasticsearch = {
-  name          = "mam-on-eks"
-  instance_type = "t3.small.elasticsearch"
-  volume_size   = 10
 }

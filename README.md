@@ -1,4 +1,5 @@
 # MAM on EKS
+# MAM on EKS
 
 This documentation provides steps to deploy **Phraseanet** using **AWS EKS**.
 
@@ -51,6 +52,9 @@ We have another README guide for production at the main branch [here](https://gi
 The names used are just examples, such as `sandbox-tf-states`, `mam-on-eks-tf-lock-table`, `Leandro Mota`.  
 Change it as desired.  
 
+The names used are just examples, such as `sandbox-tf-states`, `mam-on-eks-tf-lock-table`, `Leandro Mota`.  
+Change it as desired.  
+
 ```bash
 aws s3api create-bucket \
   --bucket sandbox-tf-states \
@@ -65,8 +69,13 @@ aws s3api put-bucket-tagging \
   --bucket sandbox-tf-states \
   --tagging 'TagSet=[{Key=Environment,Value=sandbox},{Key=Owner,Value="Leandro Mota"},{Key=Project,Value=mam-on-eks},{Key=Name,Value=sandbox-tf-states}]' \
   --profile sandbox
+  --bucket sandbox-tf-states \
+  --tagging 'TagSet=[{Key=Environment,Value=sandbox},{Key=Owner,Value="Leandro Mota"},{Key=Project,Value=mam-on-eks},{Key=Name,Value=sandbox-tf-states}]' \
+  --profile sandbox
 ```
 3. **Create a DynamoDB Table for Terraform Locking (Optional):**
+
+1. **Create a DynamoDB Table for Terraform Locking (Optional):**
 
 ```bash
 aws dynamodb create-table \
@@ -76,6 +85,12 @@ aws dynamodb create-table \
   --billing-mode PAY_PER_REQUEST \
   --region us-west-2 \
   --profile sandbox
+  --table-name mam-on-eks-tf-lock-table \
+  --attribute-definitions AttributeName=LockID,AttributeType=S \
+  --key-schema AttributeName=LockID,KeyType=HASH \
+  --billing-mode PAY_PER_REQUEST \
+  --region us-west-2 \
+  --profile sandbox
 ```
 4. **Tag the DynamoDB Table:**
 
@@ -85,8 +100,13 @@ aws dynamodb tag-resource \
   --tags Key=Name,Value=mam-on-eks-tf-lock-table Key=Environment,Value=sandbox Key=Owner,Value="Leandro Mota" Key=Project,Value=mam-on-eks \
   --region us-west-2 \
   --profile sandbox
+  --resource-arn arn:aws:dynamodb:us-west-2:<YOUR_AWS_ACCOUNT_ID>:table/mam-on-eks-tf-lock-table \
+  --tags Key=Name,Value=mam-on-eks-tf-lock-table Key=Environment,Value=sandbox Key=Owner,Value="Leandro Mota" Key=Project,Value=mam-on-eks \
+  --region us-west-2 \
+  --profile sandbox
 ```
-5. **Create a Secret for Terraform Variables in AWS Secrets Manager(Optional):**
+
+3. **Create a Secret for Terraform Variables in AWS Secrets Manager(Optional):**
 
 ```bash
 aws secretsmanager create-secret \
@@ -95,12 +115,37 @@ aws secretsmanager create-secret \
   --name "mam-on-eks-tfvars" \
   --secret-string file://sandbox.tfvars \
   --tags '[{"Key":"Name", "Value":"mam-on-eks-tfvars"}, {"Key":"Owner", "Value":"Leandro Mota"}, {"Key":"Project", "Value":"mam-on-eks"}]'
+  --region "us-west-2" \
+  --profile sandbox \
+  --name "mam-on-eks-tfvars" \
+  --secret-string file://sandbox.tfvars \
+  --tags '[{"Key":"Name", "Value":"mam-on-eks-tfvars"}, {"Key":"Owner", "Value":"Leandro Mota"}, {"Key":"Project", "Value":"mam-on-eks"}]'
 ```
 
 ### Running Terraform
 
 Before running Terraform, ensure that your AWS CLI profile is correctly configured with the necessary credentials. Additionally, you need a `.tfvars` file containing the required values. A sample file (`sample.tfvars`) is available in the **terraform** folder.
 
+### Initializing Terraform
+
+First, initialize Terraform with the following command:
+
+```bash
+terraform init \
+  -backend-config="bucket=sandbox-tf-states" \
+  -backend-config="key=terraform-sandbox/mam-on-eks-state" \
+  -backend-config="region=us-west-2" \
+  -backend-config="dynamodb_table=mam-on-eks-tf-lock-table" \
+  -backend-config="dynamodb_endpoint=https://dynamodb.us-west-2.amazonaws.com"
+```
+
+If needed, set the AWS profile environment variable:  
+
+```bash
+export AWS_PROFILE=sandbox
+```
+
+Then, create a workspace for your environment:
 ### Initializing Terraform
 
 First, initialize Terraform with the following command:
@@ -146,6 +191,8 @@ After deploying the cluster, update your `kubeconfig` file to interact with EKS:
 
 ```bash
 aws eks --region us-west-2 update-kubeconfig \
+  --name mam-on-eks \
+  --kubeconfig ~/.kube/mam-on-eks-config \
   --name mam-on-eks \
   --kubeconfig ~/.kube/mam-on-eks-config \
   --profile sandbox

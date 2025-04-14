@@ -31,8 +31,8 @@ data "template_file" "job_setup_database_template" {
   template = file("../phraseanet/k8s-manifests/job-setup-database.yaml.tpl")
 
   vars = {
-    rds_db_host          = module.database.rds_address
-    rds_db_root_password = var.database.password
+    rds_db_host          = "db"
+    rds_db_root_password = "phraseanet"
   }
 }
 
@@ -50,7 +50,7 @@ resource "kubectl_manifest" "job_setup_database_manifest" {
   depends_on = [ helm_release.phraseanet_stack ]
 }
 
-# Service Account for the Cluster accesses the ALB resource
+#Service Account for the Cluster accesses the ALB resource
 resource "kubectl_manifest" "aws_lb_controller_sa" {
   yaml_body = <<YAML
 apiVersion: v1

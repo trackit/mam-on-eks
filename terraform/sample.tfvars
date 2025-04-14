@@ -1,6 +1,6 @@
 # This file is a sample of the variables that you can use to create the EKS cluster.
-profile            = "sandbox"
-env                = "sandbox"
+profile            = "production"
+env                = "prd"
 owner              = "Leandro Mota"
 project            = "mam-on-eks"
 vpc_name           = "vpc-mam-on-eks"
@@ -8,6 +8,8 @@ cidr               = "10.1.0.0/16"
 availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
 pv_subnets_cidr    = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
 pb_subnets_cidr    = ["10.1.11.0/24", "10.1.12.0/24", "10.1.13.0/24"]
+phraseanet_admin_account_email    = "admin@alchemy.fr"
+phraseanet_admin_account_password = "phraseanet"
 cluster = {
   name    = "mam-on-eks"
   version = "1.31"

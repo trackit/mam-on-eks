@@ -100,11 +100,6 @@ aws secretsmanager create-secret \
   --name "mam-on-eks-tfvars" \
   --secret-string file://sandbox.tfvars \
   --tags '[{"Key":"Name", "Value":"mam-on-eks-tfvars"}, {"Key":"Owner", "Value":"Leandro Mota"}, {"Key":"Project", "Value":"mam-on-eks"}]'
-  --region "us-west-2" \
-  --profile sandbox \
-  --name "mam-on-eks-tfvars" \
-  --secret-string file://sandbox.tfvars \
-  --tags '[{"Key":"Name", "Value":"mam-on-eks-tfvars"}, {"Key":"Owner", "Value":"Leandro Mota"}, {"Key":"Project", "Value":"mam-on-eks"}]'
 ```
 
 ### Running Terraform

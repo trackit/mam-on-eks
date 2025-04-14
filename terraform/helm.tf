@@ -49,26 +49,6 @@ resource "helm_release" "alb-controller" {
   }
 
   set {
-    name = "app.phraseanet_rabbitmq_user"
-    value = var.rabbit_mq.username
-  }
-
-  set {
-    name = "app.phraseanet_rabbitmq_pass"
-    value = var.rabbit_mq.password
-  }
-
-  set {
-    name = "app.phraseanet_rabbitmq_ssl"
-    value = "true"
-  }
-
-  set {
-    name = "app.phraseanet_rabbitmq_port"
-    value = "5671"
-  }
-
-  set {
     name  = "enableCertManager"
     value = false
   }
@@ -76,16 +56,6 @@ resource "helm_release" "alb-controller" {
   set {
     name  = "serviceAccount.create"
     value = "false"
-  }
-
-  set {
-    name = "app.phraseanet_admin_account_email"
-    value = var.phraseanet_admin_account_email
-  }
-
-  set {
-    name  = "app.phraseanet_admin_account_password"
-    value = var.phraseanet_admin_account_password
   }
 
   set {

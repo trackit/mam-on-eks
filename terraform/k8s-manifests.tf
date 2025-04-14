@@ -1,3 +1,9 @@
+resource "time_sleep" "wait_for_eks" {
+  depends_on = [module.eks.aws_eks_addon]
+  
+  create_duration = "60s"
+}
+
 data "template_file" "standard_sc" {
   template = file("../phraseanet/k8s-manifests/storageclass.yaml.tpl")
 
@@ -18,9 +24,7 @@ resource "kubectl_manifest" "standard_sc" {
     ]
   }
 
-  # depends_on = [module.eks] 
-  # depends_on = [time_sleep.wait_for_eks]
-  depends_on = [ kubectl_manifest.wait_for_nodes_job]
+  depends_on = [time_sleep.wait_for_eks]
 }
 
 data "template_file" "job_setup_database_template" {
@@ -46,7 +50,7 @@ resource "kubectl_manifest" "job_setup_database_manifest" {
   depends_on = [ helm_release.phraseanet_stack ]
 }
 
-#Service Account for the Cluster access the ALB resource
+#Service Account for the Cluster accesses the ALB resource
 resource "kubectl_manifest" "aws_lb_controller_sa" {
   yaml_body = <<YAML
 apiVersion: v1
@@ -61,7 +65,7 @@ YAML
   wait_for_rollout = false
 
 depends_on = [ 
-  kubectl_manifest.wait_for_nodes_job
+  time_sleep.wait_for_eks
  ]
 
 }

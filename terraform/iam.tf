@@ -1,28 +1,3 @@
-# EKS IAM Resources
-
-# resource "aws_iam_role" "eks_role" {
-#   name = "eks_role_${var.env}"
-
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = "sts:AssumeRole"
-#         Principal = {
-#           Service = "ec2.amazonaws.com"
-#         }
-#         Effect = "Allow"
-#         Sid    = ""
-#       },
-#     ]
-#   })
-
-#   tags = {
-#     Environment = var.env
-#     Terraform   = "true"
-#   }
-# }
-
 resource "aws_iam_role_policy_attachment" "ecr_policy_attachment" {
   for_each   = module.eks.eks_managed_node_groups
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
@@ -46,31 +21,6 @@ resource "aws_iam_role_policy_attachment" "efs_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
   role       = each.value.iam_role_name
 }
-
-# resource "aws_iam_role_policy_attachment" "ebs_policy_attachment" {
-#   for_each   = module.eks.eks_managed_node_groups
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-#   role       = each.value.iam_role_name
-# }
-
-# ALB IAM resources
-
-# resource "aws_iam_role" "alb_controller_role" {
-#   name = "AWSLoadBalancerControllerRole-${var.env}"
-
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Principal = {
-#           Service = "eks.amazonaws.com"
-#         },
-#         Action = "sts:AssumeRole"
-#       }
-#     ]
-#   })
-# }
 
 # IAM Role to access the Secrets Manager
 

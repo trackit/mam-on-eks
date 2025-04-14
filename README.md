@@ -1,5 +1,4 @@
 # MAM on EKS
-# MAM on EKS
 
 This documentation provides steps to deploy **Phraseanet** using **AWS EKS**.
 
@@ -49,6 +48,7 @@ This guide assumes a **sandbox environment**, with AWS access configured via the
 We have another README guide for production at the main branch [here](https://github.com/trackit/mam-on-eks/tree/main).
 
 1. **Create an S3 Bucket for Terraform State:**
+
 The names used are just examples, such as `sandbox-tf-states`, `mam-on-eks-tf-lock-table`, `Leandro Mota`.  
 Change it as desired.  
 

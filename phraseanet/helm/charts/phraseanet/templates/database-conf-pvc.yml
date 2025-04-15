@@ -5,7 +5,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   annotations:
-  name: {{ .pvc_name }}
+  name: {{ .pvc_conf_name }}
 spec:
   accessModes:
     - {{ .persistence.accessMode | quote }}

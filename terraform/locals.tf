@@ -16,7 +16,3 @@ locals {
 locals {
   account_id = data.aws_caller_identity.current.account_id
 }
-
-# locals {
-#   alb_controller_role_arn = module.aws_lb_controller_pod_identity.iam_role_arn
-# }

@@ -26,6 +26,7 @@ mysql:
   max_allowed_packet: 16M
   max_connection: 100
   pvc_name: phraseanet-database
+  pvc_conf_name: phraseanet-database-conf
   resources:
     requests:
       cpu: "50m"
@@ -33,6 +34,8 @@ mysql:
     limits:
       cpu: "2000m"
       memory: "4096Mi"
+  runAsUser:
+  runAsGroup:
   persistence:
     enabled: true
     existingClaim:
@@ -52,6 +55,8 @@ elasticsearch:
     limits:
       cpu: "2000m"
       memory: "4096Mi"
+  runAsUser:
+  runAsGroup:
   persistence:
     enabled: true
     existingClaim:
@@ -63,28 +68,28 @@ elasticsearch:
 
 rabbitmq:
   enabled: true
-#   port: "{{ .Values.app.phraseanet_rabbitmq_port }}"
-#   default_user: "{{ .Values.app.phraseanet_rabbitmq_user }}"
-#   default_pass: "{{ .Values.app.phraseanet_rabbitmq_pass }}"
-#   default_vhost: "{{ .Values.app.phraseanet_rabbitmq_vhost }}"
-#   node_name: rabbit@rabbitmq
-#   heartbeat: 60
-#   runAsUser:
-#   runAsGroup:
-#   persistence:
-#     enabled: true
-#     existingClaim:
-#     storageClass: standard
-#     annotations: {}
-#     accessMode: ReadWriteOnce
-#     size: 1Gi
-#   resources:
-#     requests:
-#       cpu: "50m"
-#       memory: "256Mi"
-#     limits:
-#       cpu: "2000m"
-#       memory: "4096Mi"
+  port: "{{ .Values.app.phraseanet_rabbitmq_port }}"
+  default_user: "{{ .Values.app.phraseanet_rabbitmq_user }}"
+  default_pass: "{{ .Values.app.phraseanet_rabbitmq_pass }}"
+  default_vhost: "{{ .Values.app.phraseanet_rabbitmq_vhost }}"
+  node_name: rabbit@rabbitmq
+  heartbeat: 60
+  runAsUser:
+  runAsGroup:
+  persistence:
+    enabled: true
+    existingClaim:
+    storageClass: standard
+    annotations: {}
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "256Mi"
+    limits:
+      cpu: "2000m"
+      memory: "4096Mi"
 
 externalservice:
   pusher:
@@ -133,7 +138,7 @@ php:
   cookie_secure: 0
 
 ingress:
-  enabled: true
+  enabled: false
   host: phraseanet
   tls: false
 
@@ -195,7 +200,7 @@ app:
   phraseanet_admin_account_id:
   phraseanet_admin_account_email: admin@alchemy.fr
   phraseanet_admin_account_password: phraseanet
-  phraseanet_db_host: mam-sandbox.cifgalpx8ots.us-west-2.rds.amazonaws.com
+  phraseanet_db_host: db
   phraseanet_db_port: 3306
   phraseanet_db_user: root
   phraseanet_db_password: phraseanet
@@ -206,11 +211,11 @@ app:
   phraseanet_elasticsearch_host: elasticsearch
   phraseanet_elasticsearch_port: 9200
   phraseanet_rabbitmq_host: rabbitmq
-  phraseanet_rabbitmq_port: 5671
-  phraseanet_rabbitmq_ssl: true
+  phraseanet_rabbitmq_port: 5672
+  phraseanet_rabbitmq_ssl: false
   phraseanet_rabbitmq_vhost: /
   phraseanet_rabbitmq_user: rabbit
-  phraseanet_rabbitmq_pass: rabbitrabbit
+  phraseanet_rabbitmq_pass: rabbit
   phraseanet_session_type: redis
   phraseanet_session_host: redis-session
   phraseanet_session_port: 6379
@@ -500,3 +505,6 @@ app:
       config: phraseanet-config
       ftp: phraseanet-ftp
       backup: phraseanet-backup
+  setup:
+    runAsUser:
+    runAsGroup:

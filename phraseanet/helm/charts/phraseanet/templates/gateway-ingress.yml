@@ -2,15 +2,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: phraseanet-gateway
   labels:
     app: phraseanet-gateway
-  name: phraseanet-gateway
-  {{- template "phraseanet.ingressAnnotations" . }}
+  {{- with .Values.ingress.annotations }}
   annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  ingressClassName: phraseanet-alb
   rules:
     - http:
         paths:

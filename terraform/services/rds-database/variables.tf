@@ -35,6 +35,11 @@ variable "owner" {
   type        = string
 }
 
+variable "project" {
+  description = "Project name"
+  type        = string
+}
+
 variable "vpc_id" {
   description = "VPC ID"
   type        = string
@@ -50,4 +55,9 @@ variable "name" {
   description = "Name of the database"
   type        = string
   default     = "mamsandbox"
+}
+
+variable "sns_topic_arn" {
+  description = "The arn for the sns topic"
+  type        = string
 }

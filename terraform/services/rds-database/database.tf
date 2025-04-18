@@ -26,7 +26,7 @@ resource "aws_db_parameter_group" "database_parameter_group" {
 
 resource "aws_db_subnet_group" "eks_shared" {
   name       = "${var.identifier}-eks-shared"
-  subnet_ids = var.pv_subnets_cidr
+  subnet_ids = var.pv_subnet_ids
 }
 
 resource "aws_security_group" "rds_sg" {
@@ -38,14 +38,14 @@ resource "aws_security_group" "rds_sg" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.pv_subnets_cidr
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.pv_subnets_cidr
   }
 
   tags = {

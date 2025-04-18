@@ -3,6 +3,11 @@ variable "cluster_id" {
   type        = string
 }
 
+variable "pv_subnet_ids" {
+  description = "The IDs of the private subnets"
+  type        = list(string)
+}
+
 variable "pv_subnets_cidr" {
   description = "The CIDR blocks of the private subnets"
   type        = list(string)

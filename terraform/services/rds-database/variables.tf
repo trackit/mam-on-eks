@@ -25,6 +25,11 @@ variable "storage" {
   default     = 5
 }
 
+variable "pv_subnet_ids" {
+  description = "Subnet IDs for the database"
+  type        = list(string)
+}
+
 variable "pv_subnets_cidr" {
   description = "CIDR blocks for the private subnets"
   type        = list(string)

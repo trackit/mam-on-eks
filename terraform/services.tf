@@ -9,6 +9,8 @@ module "rabbitmq" {
   rabbit_mq_version = var.rabbit_mq.version
   deployment_mode   = var.rabbit_mq.deployment_mode
   subnet_ids        = [module.vpc.public_subnets[0]]
+  pv_subnet_ids     = module.vpc.private_subnets
+  pv_subnets_cidr   = module.vpc.private_subnets_cidr_blocks
   vpc_id            = module.vpc.vpc_id
   owner             = var.owner
   project           = var.project
@@ -22,7 +24,8 @@ module "database" {
   storage             = var.database.storage
   username            = var.database.username
   password            = var.database.password
-  pv_subnets_cidr     = module.vpc.private_subnets
+  pv_subnet_ids       = module.vpc.private_subnets
+  pv_subnets_cidr     = module.vpc.private_subnets_cidr_blocks
   owner               = var.owner
   project             = var.project
   vpc_id              = module.vpc.vpc_id
@@ -34,7 +37,8 @@ module "elasticache" {
   source          = "./services/elasticache"
   cluster_id      = var.elasticache.cluster_id
   node_type       = var.elasticache.node_type
-  pv_subnets_cidr = module.vpc.private_subnets
+  pv_subnet_ids   = module.vpc.private_subnets
+  pv_subnets_cidr = module.vpc.private_subnets_cidr_blocks
   vpc_id          = module.vpc.vpc_id
   owner           = var.owner
   project         = var.project
@@ -44,7 +48,8 @@ module "elasticsearch" {
   source          = "./services/elasticsearch"
   name            = var.elasticsearch.name
   instance_type   = var.elasticsearch.instance_type
-  pv_subnets_cidr = module.vpc.private_subnets
+  pv_subnet_ids   = module.vpc.private_subnets
+  pv_subnets_cidr = module.vpc.private_subnets_cidr_blocks
   vpc_id          = module.vpc.vpc_id
   owner           = var.owner
   project         = var.project

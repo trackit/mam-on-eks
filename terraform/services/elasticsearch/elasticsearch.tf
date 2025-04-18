@@ -17,7 +17,7 @@ resource "aws_elasticsearch_domain" "elasticsearch" {
   }
 
   vpc_options {
-    subnet_ids         = [var.pv_subnets_cidr[0]]
+    subnet_ids         = [var.pv_subnet_ids[0]]
     security_group_ids = [aws_security_group.es_sg.id]
   }
 
@@ -57,14 +57,14 @@ resource "aws_security_group" "es_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.pv_subnets_cidr
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.pv_subnets_cidr
   }
 
   tags = {

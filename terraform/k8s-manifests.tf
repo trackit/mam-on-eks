@@ -69,3 +69,27 @@ depends_on = [
  ]
 
 }
+
+data "template_file" "sa_manifest" {
+  template = file("../phraseanet/k8s-manifests/service_account.yaml.tpl")
+
+  vars = {
+    arn   = aws_iam_role.cloudwatch_agent_role.arn
+    # hardcoded for now
+    name = "cloudwatch-agent"
+  }
+}
+
+resource "kubectl_manifest" "cloudwatch_agent_sa" {
+  yaml_body = data.template_file.sa_manifest.rendered
+  apply_only = true
+  wait_for_rollout = false
+  depends_on = [
+    aws_iam_role.cloudwatch_agent_role
+  ]
+  lifecycle {
+    ignore_changes = [
+      yaml_body
+    ]
+  }
+}

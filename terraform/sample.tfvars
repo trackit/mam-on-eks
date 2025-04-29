@@ -2,6 +2,7 @@
 profile            = "sandbox"
 env                = "sandbox"
 owner              = "Leandro Mota"
+email              = "example@example.com"
 project            = "mam-on-eks"
 vpc_name           = "vpc-mam-on-eks"
 cidr               = "10.1.0.0/16"

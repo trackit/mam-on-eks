@@ -42,3 +42,8 @@ variable "owner" {
   description = "Owner of the RabbitMQ broker"
   type        = string
 }
+
+variable "project" {
+  description = "Project name"
+  type        = string
+}

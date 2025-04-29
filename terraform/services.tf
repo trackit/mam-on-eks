@@ -11,6 +11,7 @@ module "rabbitmq" {
   subnet_ids        = [module.vpc.public_subnets[0]]
   vpc_id            = module.vpc.vpc_id
   owner             = var.owner
+  project           = var.project
 }
 
 module "database" {
@@ -23,8 +24,10 @@ module "database" {
   password            = var.database.password
   pv_subnets_cidr     = module.vpc.private_subnets
   owner               = var.owner
+  project             = var.project
   vpc_id              = module.vpc.vpc_id
   skip_final_snapshot = var.database.skip_final_snapshot
+  sns_topic_arn       = aws_sns_topic.mam_sns_topic_database.arn
 }
 
 module "elasticache" {
@@ -34,6 +37,7 @@ module "elasticache" {
   pv_subnets_cidr = module.vpc.private_subnets
   vpc_id          = module.vpc.vpc_id
   owner           = var.owner
+  project         = var.project
 }
 
 module "elasticsearch" {
@@ -43,4 +47,5 @@ module "elasticsearch" {
   pv_subnets_cidr = module.vpc.private_subnets
   vpc_id          = module.vpc.vpc_id
   owner           = var.owner
+  project         = var.project
 }

@@ -27,6 +27,7 @@ resource "aws_security_group" "mq_sg" {
   tags = {
     Name = "${var.name}-security-group"
     Owner = var.owner
+    Project = var.project
   }
 }
 
@@ -60,6 +61,11 @@ resource "aws_mq_broker" "rabbitmq_broker" {
   }
 
   apply_immediately = true
+
+  tags = {
+    Owner = var.owner
+    Project = var.project
+  }
 }
 resource "aws_mq_configuration" "rabbitmq_broker_config" {
   description    = "RabbitMQ config"

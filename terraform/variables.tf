@@ -139,3 +139,15 @@ variable "iam_role_additional_policies" {
   type        = map(string)
   default     = {}
 }
+
+variable "phraseanet_admin_account_email" {
+  description = "Admin account email to use on Phraseanet"
+  type        = string
+  default     = "admin@alchemy.fr"
+}
+
+variable "phraseanet_admin_account_password" {
+  description = "Admin account password to use on Phraseanet"
+  type        = string
+  default     = "phraseanet"
+}

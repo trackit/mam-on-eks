@@ -1,3 +1,9 @@
+resource "time_sleep" "wait_for_eks" {
+  depends_on = [module.eks.aws_eks_addon]
+  
+  create_duration = "60s"
+}
+
 data "template_file" "standard_sc" {
   template = file("../phraseanet/k8s-manifests/storageclass.yaml.tpl")
 
@@ -17,30 +23,8 @@ resource "kubectl_manifest" "standard_sc" {
       yaml_body
     ]
   }
-}
 
-resource "kubectl_manifest" "storageclass_manifest" {
-  yaml_body        = file("../phraseanet/k8s-manifests/ingressclass.yaml")
-  apply_only       = true
-  wait_for_rollout = false
-
-  lifecycle {
-    ignore_changes = [
-      yaml_body
-    ]
-  }
-}
-
-resource "kubectl_manifest" "namespace_manifest" {
-  yaml_body        = file("../phraseanet/k8s-manifests/namespace.yaml")
-  apply_only       = true
-  wait_for_rollout = false
-
-  lifecycle {
-    ignore_changes = [
-      yaml_body
-    ]
-  }
+  depends_on = [time_sleep.wait_for_eks]
 }
 
 data "template_file" "job_setup_database_template" {
@@ -62,6 +46,28 @@ resource "kubectl_manifest" "job_setup_database_manifest" {
       yaml_body
     ]
   }
+
+  depends_on = [ helm_release.phraseanet_stack ]
+}
+
+# Service Account for the Cluster accesses the ALB resource
+resource "kubectl_manifest" "aws_lb_controller_sa" {
+  yaml_body = <<YAML
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aws-load-balancer-controller
+  namespace: kube-system
+  annotations:
+    eks.amazonaws.com/role-arn: ${aws_iam_role.aws_lb_controller.arn}
+YAML
+  apply_only       = true
+  wait_for_rollout = false
+
+depends_on = [ 
+  time_sleep.wait_for_eks
+ ]
+
 }
 
 data "template_file" "sa_manifest" {

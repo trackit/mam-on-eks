@@ -33,6 +33,16 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "pv_subnet_ids" {
+  description = "Private subnet IDs for the RabbitMQ broker"
+  type        = list(string)
+}
+
+variable "pv_subnets_cidr" {
+  description = "Private subnets CIDR for the RabbitMQ broker"
+  type        = list(string)
+}
+
 variable "vpc_id" {
   description = "VPC ID for the RabbitMQ broker"
   type        = string

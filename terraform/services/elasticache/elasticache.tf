@@ -91,7 +91,7 @@ resource "aws_iam_role_policy" "elasticache_logs_policy" {
 
 resource "aws_elasticache_subnet_group" "eks_shared" {
   name       = "${var.cluster_id}-eks-shared"
-  subnet_ids = var.pv_subnets_cidr
+  subnet_ids = var.pv_subnet_ids
 }
 
 resource "aws_security_group" "elasticache_sg" {
@@ -103,14 +103,14 @@ resource "aws_security_group" "elasticache_sg" {
     from_port   = 6379
     to_port     = 6379
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.pv_subnets_cidr
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.pv_subnets_cidr
   }
 
   tags = {
